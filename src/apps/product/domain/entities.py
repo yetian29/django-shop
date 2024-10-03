@@ -1,6 +1,7 @@
 
 
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
+from enum import Enum
 from src.apps.base.domain.entities import BaseDataField, BaseTime
 from src.apps.product.domain.values_object import GenderEnum
 
@@ -17,7 +18,7 @@ class CatalogProduct(BaseProduct):
     
 @dataclass
 class Product(BaseProduct, BaseTime):
-    images: list[str]
+    # images: list[str]
     category: BaseDataField
     place_sell: BaseDataField
     brand: BaseDataField
@@ -28,5 +29,9 @@ class Product(BaseProduct, BaseTime):
     quantity: int
 
 
+ProductSortFieldList = Enum(
+    "ProductSortFieldList",
+    {field.name: field.value for field in fields(Product)}    
+)
     
     
