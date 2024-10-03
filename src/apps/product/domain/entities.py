@@ -1,12 +1,11 @@
 
 
 from dataclasses import dataclass
-from src.apps.base.domain.entities import BaseDataField, BaseOid, BaseTime
+from src.apps.base.domain.entities import BaseDataField, BaseTime
 from src.apps.product.domain.values_object import GenderEnum
 
 @dataclass
-class BaseProduct(BaseOid):
-    name: str
+class BaseProduct(BaseDataField):
     price: int
     
     
@@ -17,14 +16,15 @@ class CatalogProduct(BaseProduct):
     place_sell: BaseDataField
     
 @dataclass
-class Product(BaseProduct):
+class Product(BaseProduct, BaseTime):
     images: list[str]
     category: BaseDataField
     place_sell: BaseDataField
     brand: BaseDataField
     color: BaseDataField
-    sizes: BaseDataField
+    size: BaseDataField
     gender: GenderEnum
+    sold: int
     quantity: int
 
 

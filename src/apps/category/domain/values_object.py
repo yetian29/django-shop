@@ -1,5 +1,8 @@
 
 
+from enum import Enum
+
+
 class CategoryEnum(str, Enum):
-    cloth = "cloth"
-    accessory = "accessory"
+    Cloth = "cloth"
+    Accessory = "accessory"

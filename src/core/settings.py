@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Project apps
-    "src.apps.product"
+    "src.apps.product",
+    "src.apps.base",
+    "src.apps.category"
 ]
 
 
