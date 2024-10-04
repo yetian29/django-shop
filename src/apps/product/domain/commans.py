@@ -21,7 +21,8 @@ class SortQuery:
 class PaginationQuery:
     page: int = 0
     limit: int = 20
-    
+   
+    @property 
     def offset(self) -> int:
         return self.page * self.limit
     
