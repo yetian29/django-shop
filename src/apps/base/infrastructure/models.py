@@ -19,3 +19,6 @@ class BaseTimeORM(models.Model):
 
 class BaseDataFieldORM(BaseOidORM):
     name = models.CharField(max_length=128)
+    
+    class Meta:
+        abstract = True

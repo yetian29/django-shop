@@ -31,7 +31,7 @@ class Product(BaseProduct, BaseTime):
 
 ProductSortFieldList = Enum(
     "ProductSortFieldList",
-    {field.name: field.value for field in fields(Product)}    
+    {field.name: field.name for field in fields(Product)}    
 )
     
     

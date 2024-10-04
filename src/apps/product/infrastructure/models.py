@@ -6,14 +6,26 @@ from src.apps.product.domain.entities import Product
 from src.apps.product.domain.values_object import GenderEnum
 
 
+class PlaceSellORM(BaseDataFieldORM):
+    pass
+
+class BrandORM(BaseDataFieldORM):
+    pass
+
+class ColorORM(BaseDataFieldORM):
+    pass
+
+class SizeORM(BaseDataFieldORM):
+    pass
+
 class ProductORM(BaseDataFieldORM, BaseTimeORM):
     price = models.PositiveIntegerField(default=0)
     # images = models.ImageField()
     category = models.ForeignKey(CategoryORM, on_delete=models.CASCADE, related_name="products")
-    place_sell = models.ForeignKey(BaseDataFieldORM, on_delete=models.PROTECT, related_name="products_place_sell")
-    brand = models.ForeignKey(BaseDataFieldORM, on_delete=models.PROTECT, related_name="products_brand")
-    color = models.ForeignKey(BaseDataFieldORM, on_delete=models.PROTECT, related_name="products_color")
-    size = models.ForeignKey(BaseDataFieldORM, on_delete=models.PROTECT, related_name="products_size")
+    place_sell = models.ForeignKey(PlaceSellORM, on_delete=models.PROTECT, related_name="products_place_sell")
+    brand = models.ForeignKey(BrandORM, on_delete=models.PROTECT, related_name="products_brand")
+    color = models.ForeignKey(ColorORM, on_delete=models.PROTECT, related_name="products_color")
+    size = models.ForeignKey(SizeORM, on_delete=models.PROTECT, related_name="products_size")
     gender = models.CharField(max_length=16, choices=[(tag.value, tag.name) for tag in GenderEnum], default=GenderEnum.Unisex)
     quantity = models.PositiveIntegerField(default=0)
 

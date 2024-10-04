@@ -6,7 +6,7 @@ from src.apps.category.infrastructure.models import CategoryORM
 
 
 class CategoryORMAdmin(admin.ModelAdmin):
-    list_display = ["oid", "name", "category"]
-    list_display_links = ["oid", "name"]
+    list_display = ["oid", "category"]
+    list_display_links = ["oid"]
     
 admin.site.register(CategoryORM, CategoryORMAdmin)

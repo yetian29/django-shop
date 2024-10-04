@@ -54,7 +54,12 @@ class PostgresProductRepository(IProductRepository):
         query = self._build_find_query(search=search)
         sort_direction = "-" if sort_order == -1 else ""
         order_by_field = f"{sort_direction}{sort_field}"
-        docs = ProductORM.objects.filter(query=query).order_by(order_by_field)[offset:offset+limit]
-        return docs
+        products = ProductORM.objects.filter(query=query).order_by(order_by_field)[offset:offset+limit]
+        return products
+    
+    def count_many(self, search: str | None = None) -> int:
+        query = self._build_find_query(search=search)
+        count = ProductORM.objects.filter(query=query).count()
+        return count
         
         
