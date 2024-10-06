@@ -16,7 +16,7 @@ def get_sort(
     sort_order: SortOrderEnum = SortOrderEnum.asc
     ) -> SortQuery:
     return SortQuery(
-        sort_field=sortfield,
+        sort_field=sort_field,
         sort_order=sort_order
     )
  
