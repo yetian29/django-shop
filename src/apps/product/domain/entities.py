@@ -12,7 +12,7 @@ class BaseProduct(BaseDataField):
     
 @dataclass
 class CatalogProduct(BaseProduct):
-    image: str
+    # image: str
     sold: int
     place_sell: BaseDataField
     
@@ -29,8 +29,8 @@ class Product(BaseProduct, BaseTime):
     quantity: int
 
 
-ProductSortFieldList = Enum(
-    "ProductSortFieldList",
+ProductSortFieldsList = Enum(
+    "ProductSortFieldsList",
     {field.name: field.name for field in fields(Product)}    
 )
     
