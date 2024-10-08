@@ -13,25 +13,24 @@ class BaseProduct(BaseDataField):
 @dataclass
 class CatalogProduct(BaseProduct):
     # image: str
-    sold: int
+    sold: str
     place_sell: BaseDataField
+
+    
     
 @dataclass
 class Product(BaseProduct, BaseTime):
     # images: list[str]
     category: BaseDataField
-    place_sell: BaseDataField
     brand: BaseDataField
     color: BaseDataField
     size: BaseDataField
     gender: GenderEnum
-    sold: int
     quantity: int
 
 
-ProductSortFieldsList = Enum(
-    "ProductSortFieldsList",
-    {field.name: field.name for field in fields(Product)}    
+CatalogProductSortFieldsEnum = Enum(
+    "CatalogProductSortFieldsEnum",
+    {field.name: field.name for field in fields(CatalogProduct)}
 )
-    
-    
+

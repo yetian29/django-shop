@@ -1,7 +1,7 @@
 
 
 from abc import ABC, abstractmethod
-from src.apps.product.domain.entities import Product
+from src.apps.product.domain.entities import CatalogProduct, Product
 
 
 class IProductService(ABC):
@@ -17,7 +17,7 @@ class IProductService(ABC):
         limit: int,
         offset: int,
         search: str | None = None      
-    ) -> list[Product]:
+    ) -> list[CatalogProduct]:
         pass
 
     @abstractmethod

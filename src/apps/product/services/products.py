@@ -2,7 +2,7 @@
 
 
 from dataclasses import dataclass
-from src.apps.product.domain.entities import Product
+from src.apps.product.domain.entities import CatalogProduct, Product
 from src.apps.product.domain.services import IProductService
 from src.apps.product.infrastructure.repositories import IProductRepository
 
@@ -21,7 +21,7 @@ class ProductService(IProductService):
         limit: int, 
         offset: int,
         search: str | None = None
-        ) -> list[Product]:
+        ) -> list[CatalogProduct]:
         products = self.repository.find_many(
             sort_field=sort_field,
             sort_order=sort_order,
@@ -29,7 +29,7 @@ class ProductService(IProductService):
             offset=offset,
             search=search
         )
-        return [product.to_entity() for product in products]
+        return [product.to_catalog_product_entity() for product in products]
     
     def count_many(self, search: str | None = None) -> int:
         count = self.repository.count_many(search=search)

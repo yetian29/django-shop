@@ -12,6 +12,7 @@ class GetProductUseCase:
         return self.service.get_by_id(oid=command.oid)
 
 
+@dataclass
 class GetProductListUseCase:
     service: IProductService
     

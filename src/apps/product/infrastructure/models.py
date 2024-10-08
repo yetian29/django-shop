@@ -2,22 +2,26 @@ from django.db import models
 
 from src.apps.base.infrastructure.models import BaseDataFieldORM, BaseTimeORM
 from src.apps.category.infrastructure.models import CategoryORM
-from src.apps.product.domain.entities import Product
+from src.apps.product.domain.entities import CatalogProduct, Product
 from src.apps.product.domain.values_object import GenderEnum
 
 
 class PlaceSellORM(BaseDataFieldORM):
-    pass
+    def __str__(self):
+        return self.name
 
 class BrandORM(BaseDataFieldORM):
-    pass
+    def __str__(self):
+        return self.name
 
 class ColorORM(BaseDataFieldORM):
-    pass
-
+    def __str__(self):
+        return self.name
+    
 class SizeORM(BaseDataFieldORM):
-    pass
-
+    def __str__(self):
+        return self.name
+    
 class ProductORM(BaseDataFieldORM, BaseTimeORM):
     price = models.PositiveIntegerField(default=0)
     # images = models.ImageField()
@@ -28,6 +32,7 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
     size = models.ForeignKey(SizeORM, on_delete=models.PROTECT, related_name="products_size")
     gender = models.CharField(max_length=16, choices=[(tag.value, tag.name) for tag in GenderEnum], default=GenderEnum.Unisex)
     quantity = models.PositiveIntegerField(default=0)
+    sold = models.CharField(max_length=16)
 
 
     def __str__(self):
@@ -50,17 +55,26 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
             updated_at=product.updated_at
         )
     
+    def to_catalog_product_entity(self) -> CatalogProduct:
+        return CatalogProduct(
+            oid=self.oid,
+            name=self.name,
+            price=self.price,
+            sold=self.sold,
+            place_sell=self.place_sell
+        )
+        
     def to_entity(self) -> Product:
         return Product(
             oid=self.oid,
             name=self.name,
             price=self.price,
             category=self.category,
-            place_sell=self.place_sell,
             brand=self.brand,
             color=self.color,
             size=self.size,
             gender=self.gender,
-            sold=self.sold,
             quantity=self.quantity
         )
+    
+    

@@ -15,7 +15,7 @@ class SortOrderEnum(int, Enum):
 @dataclass
 class SortQuery:
     sort_field: str = "oid"
-    sort_order: SortOrderEnum = field(default_factory=SortOrderEnum.asc)
+    sort_order: SortOrderEnum = SortOrderEnum.asc
 
 
 @dataclass
