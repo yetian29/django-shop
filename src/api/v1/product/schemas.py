@@ -7,7 +7,7 @@ class CatalogProductOutSchema(Schema):
     oid: UUID
     name: str
     price: int
-    sold: str
+    sold: int
     place_sell: str
 
     @staticmethod
@@ -23,10 +23,11 @@ class CatalogProductOutSchema(Schema):
 class DetailProductOutSchema(Schema):
     oid: UUID
     name: str
+    description: str
     price: int
     brand: str
-    color: list[str]
-    size: list[str]
+    colores: list[str]
+    sizes: list[str]
     quantity: int
 
 
@@ -35,10 +36,11 @@ class DetailProductOutSchema(Schema):
         return DetailProductOutSchema(
             oid=product.oid,
             name=product.name,
+            description=product.description,
             price=product.price,
             brand=product.brand.name,
-            color=product.color.name,
-            size=product.size.name,
+            colores=[color.name for color in product.colores],
+            sizes=[size.name for size in product.sizes],
             quantity=product.quantity
         )
     

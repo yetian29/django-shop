@@ -21,8 +21,8 @@ class DetailProduct(BaseProduct):
     # images: list[str]
     description: str
     brand: BaseDataField
-    color: BaseDataField
-    size: BaseDataField
+    colores: list[BaseDataField]
+    sizes: list[BaseDataField]
     quantity: int
     
 @dataclass

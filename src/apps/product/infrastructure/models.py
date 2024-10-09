@@ -27,13 +27,13 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
     description = models.TextField()
     price = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(CategoryORM, on_delete=models.CASCADE, related_name="products")
-    place_sell = models.ForeignKey(PlaceSellORM, on_delete=models.PROTECT, related_name="products_place_sell")
+    place_sell = models.ManyToManyField(PlaceSellORM, related_name="products_place_sell")
     brand = models.ForeignKey(BrandORM, on_delete=models.PROTECT, related_name="products_brand")
-    color = models.ForeignKey(ColorORM, on_delete=models.PROTECT, related_name="products_color")
-    size = models.ForeignKey(SizeORM, on_delete=models.PROTECT, related_name="products_size")
+    color = models.ManyToManyField(ColorORM, related_name="products_color")
+    size = models.ManyToManyField(SizeORM, related_name="products_size")
     gender = models.CharField(max_length=16, choices=[(tag.value, tag.name) for tag in GenderEnum], default=GenderEnum.Unisex)
     quantity = models.PositiveIntegerField(default=0)
-    sold = models.CharField(max_length=16)
+    sold = models.PositiveIntegerField(default=0)
 
 
     def __str__(self):
@@ -46,7 +46,7 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
             name=self.name,
             price=self.price,
             sold=self.sold,
-            place_sell=self.place_sell
+            place_sell=self.place_sell.all()
         )
         
     def to_detail_product_entity(self) -> DetailProduct:
@@ -56,8 +56,8 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
             description=self.description,
             price=self.price,
             brand=self.brand,
-            color=self.color,
-            size=self.size,
+            colores=self.color.all(),
+            sizes=self.size.all(),
             quantity=self.quantity
         )
     
