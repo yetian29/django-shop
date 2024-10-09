@@ -8,7 +8,7 @@ class CatalogProductOutSchema(Schema):
     name: str
     price: int
     sold: int
-    place_sell: str
+    place_sell: list[str]
 
     @staticmethod
     def from_entity(product: CatalogProduct) -> "CatalogProductOutSchema":
@@ -17,7 +17,7 @@ class CatalogProductOutSchema(Schema):
             name=product.name,
             price=product.price,
             sold=product.sold,
-            place_sell=product.place_sell.name
+            place_sell=[place_sell.name for place_sell in product.places_sell]
         )
     
 class DetailProductOutSchema(Schema):

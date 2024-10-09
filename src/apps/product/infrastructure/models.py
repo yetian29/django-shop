@@ -46,7 +46,7 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
             name=self.name,
             price=self.price,
             sold=self.sold,
-            place_sell=self.place_sell.all()
+            places_sell=self.place_sell.all()
         )
         
     def to_detail_product_entity(self) -> DetailProduct:

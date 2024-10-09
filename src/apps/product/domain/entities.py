@@ -13,8 +13,8 @@ class BaseProduct(BaseDataField):
 @dataclass
 class CatalogProduct(BaseProduct):
     # image: str
-    sold: str
-    place_sell: BaseDataField
+    sold: int
+    places_sell: list[BaseDataField]
 
 @dataclass
 class DetailProduct(BaseProduct):
