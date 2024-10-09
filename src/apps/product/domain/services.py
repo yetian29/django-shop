@@ -1,12 +1,12 @@
 
 
 from abc import ABC, abstractmethod
-from src.apps.product.domain.entities import CatalogProduct, Product
+from src.apps.product.domain.entities import CatalogProduct, DetailProduct
 
 
 class IProductService(ABC):
     @abstractmethod
-    def get_by_id(self, oid: str) -> Product:
+    def get_by_id(self, oid: str) -> DetailProduct:
         pass
     
     @abstractmethod

@@ -2,7 +2,7 @@
 
 
 from dataclasses import dataclass
-from src.apps.product.domain.entities import CatalogProduct, Product
+from src.apps.product.domain.entities import CatalogProduct, DetailProduct
 from src.apps.product.domain.services import IProductService
 from src.apps.product.infrastructure.repositories import IProductRepository
 
@@ -10,9 +10,9 @@ from src.apps.product.infrastructure.repositories import IProductRepository
 class ProductService(IProductService):
     repository: IProductRepository
     
-    def get_by_id(self, oid: str) -> Product:
+    def get_by_id(self, oid: str) -> DetailProduct:
         dto = self.repository.get_by_id(oid=oid)
-        return dto.to_entity()
+        return dto.to_detail_product_entity()
     
     def find_many(
         self, 

@@ -16,17 +16,22 @@ class CatalogProduct(BaseProduct):
     sold: str
     place_sell: BaseDataField
 
-    
+@dataclass
+class DetailProduct(BaseProduct):
+    # images: list[str]
+    description: str
+    brand: BaseDataField
+    color: BaseDataField
+    size: BaseDataField
+    quantity: int
     
 @dataclass
-class Product(BaseProduct, BaseTime):
-    # images: list[str]
+class FilterProduct(BaseProduct, BaseTime):
     category: BaseDataField
     brand: BaseDataField
     color: BaseDataField
     size: BaseDataField
     gender: GenderEnum
-    quantity: int
 
 
 CatalogProductSortFieldsEnum = Enum(
