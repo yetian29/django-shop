@@ -2,6 +2,7 @@
 
 
 from dataclasses import dataclass
+from src.apps.product.domain.command import FilterQuery # type: ignore
 from src.apps.product.domain.entities import CatalogProduct, DetailProduct
 from src.apps.product.domain.services import IProductService
 from src.apps.product.infrastructure.repositories import IProductRepository
@@ -20,6 +21,7 @@ class ProductService(IProductService):
         sort_order: int, 
         limit: int, 
         offset: int,
+        filter: FilterQuery,
         search: str | None = None
         ) -> list[CatalogProduct]:
         products = self.repository.find_many(
@@ -27,11 +29,12 @@ class ProductService(IProductService):
             sort_order=sort_order,
             limit=limit,
             offset=offset,
+            filter=filter,
             search=search
         )
         return [product.to_catalog_product_entity() for product in products]
     
-    def count_many(self, search: str | None = None) -> int:
-        count = self.repository.count_many(search=search)
+    def count_many(self, filter: FilterQuery, search: str | None = None) -> int:
+        count = self.repository.count_many(filter, search)
         return count
         

@@ -26,7 +26,7 @@ class DetailProductOutSchema(Schema):
     description: str
     price: int
     brand: str
-    colores: list[str]
+    colors: list[str]
     sizes: list[str]
     quantity: int
 
@@ -39,7 +39,7 @@ class DetailProductOutSchema(Schema):
             description=product.description,
             price=product.price,
             brand=product.brand.name,
-            colores=[color.name for color in product.colores],
+            colors=[color.name for color in product.colores],
             sizes=[size.name for size in product.sizes],
             quantity=product.quantity
         )

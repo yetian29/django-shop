@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 
+from src.apps.product.domain.command import FilterQuery # type: ignore
 from src.apps.product.infrastructure.models import ProductORM
 
 from django.db.models import Q
@@ -19,6 +20,7 @@ class IProductRepository(ABC):
         sort_order: int,
         limit: int,
         offset: int,
+        filter: FilterQuery,
         search: str | None = None
     ) -> list[ProductORM]:
         pass
@@ -26,6 +28,7 @@ class IProductRepository(ABC):
     @abstractmethod
     def count_many(
         self,
+        filter: FilterQuery,
         search: str | None = None
     ) -> int:
         pass
@@ -37,11 +40,25 @@ class PostgresProductRepository(IProductRepository):
         return doc
 
     
-    def _build_find_query(self, search: str | None = None) -> Q:
+    def _build_find_query(self, filter: FilterQuery, search: str | None = None) -> Q:
         query = Q()
-        if search:
-            search_query =  Q(name__icontains=search) | Q(description__icontains=search)
-            query &= search_query
+        if filter:
+            if filter.category:
+                query &= Q(category__in=[cat.oid for cat in filter.category])
+            
+            if filter.brands:
+                query &= Q(brand__in=[brand.oid for brand in filter.brands])  
+                
+            if filter.colors: 
+                query &= Q(color__in=[color.oid for color in filter.colors])
+            
+            if filter.gender:
+                query &= Q(gender__in=filter.gender.value)
+        else:    
+            if search:
+                    search_query =  Q(name__icontains=search) | Q(description__icontains=search)
+                    query &= search_query
+
         return query
     
     
@@ -51,9 +68,10 @@ class PostgresProductRepository(IProductRepository):
         sort_order: int, 
         limit: int, 
         offset: int, 
+        filter: FilterQuery,
         search: str | None = None
         ) -> list[ProductORM]:
-        query = self._build_find_query(search)
+        query = self._build_find_query(filter, search)
         sort_direction = "-" if sort_order == -1 else ""
         order_by_field = f"{sort_direction}{sort_field}"
         
@@ -66,8 +84,8 @@ class PostgresProductRepository(IProductRepository):
         
         return list(products)
     
-    def count_many(self, search: str | None = None) -> int:
-        query = self._build_find_query(search=search)
+    def count_many(self, filter: FilterQuery, search: str | None = None) -> int:
+        query = self._build_find_query(filter, search)
         count = ProductORM.objects.filter(query).count()
         return count
         

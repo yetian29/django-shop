@@ -3,15 +3,31 @@ from django.http import HttpRequest
 
 from src.api.v1.product.schemas import CatalogProductOutSchema, DetailProductOutSchema
 from src.api.v1.schemas import ApiResponse, PaginatedListResponse, PaginationOutSchema
-from src.apps.product.domain.commans import GetProductCommand, GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery
+from src.apps.base.domain.entities import BaseOid
+from src.apps.product.domain.command import GetProductCommand, GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery, FilterQuery # type: ignore
 from src.apps.product.domain.use_cases import GetProductListUseCase, GetProductUseCase
+from src.apps.product.domain.values_object import GenderEnum
 from src.core.containers import get_container
 from src.apps.product.domain.entities import CatalogProductSortFieldsEnum
 import punq # type: ignore
 
 
 router = Router()
-
+def get_filter(
+    category: list[str] = [],
+    brands: list[str] = [],
+    colors: list[str] = [],
+    sizes: list[str]  = [],
+    gender: GenderEnum = GenderEnum.Unisex
+):
+    return FilterQuery(
+        category=category or [],
+        brands=brands or [],
+        colors=colors or [],
+        sizes=sizes or [],
+        gender=gender
+    ) 
+    
 def get_sort(
     sort_field: CatalogProductSortFieldsEnum = CatalogProductSortFieldsEnum.oid,   # type: ignore
     sort_order: SortOrderEnum = SortOrderEnum.asc
@@ -31,12 +47,14 @@ def get_pagination(
     ) 
       
 def get_post_list_command_factory(
+    filter: FilterQuery = get_filter(),
     search: str | None = None,
     sort: SortQuery = get_sort(),
     pagination: PaginationQuery = get_pagination()
     
     ) -> GetProductListCommand:
     return GetProductListCommand(
+        filter=filter,
         search=search,
         sort=sort,
         pagination=pagination

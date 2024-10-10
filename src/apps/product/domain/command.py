@@ -3,6 +3,9 @@
 from dataclasses import dataclass, field
 from enum import Enum
 
+from src.apps.base.domain.entities import BaseOid
+from src.apps.product.domain.values_object import GenderEnum
+
 
 @dataclass
 class GetProductCommand:
@@ -28,7 +31,16 @@ class PaginationQuery:
         return self.page * self.limit
     
 @dataclass
+class FilterQuery:
+    category: list[str] = field(default_factory=list)
+    brands: list[str] = field(default_factory=list)
+    colors: list[str] = field(default_factory=list)
+    sizes: list[str] = field(default_factory=list)
+    gender: GenderEnum = GenderEnum.Unisex
+    
+@dataclass
 class GetProductListCommand:
     search: str | None = None
+    filter: FilterQuery = field(default_factory=FilterQuery)
     sort: SortQuery = field(default_factory=SortQuery)
     pagination: PaginationQuery = field(default_factory=PaginationQuery)

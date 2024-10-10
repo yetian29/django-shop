@@ -1,6 +1,7 @@
 
 
 from abc import ABC, abstractmethod
+from src.apps.product.domain.command import FilterQuery
 from src.apps.product.domain.entities import CatalogProduct, DetailProduct
 
 
@@ -16,6 +17,7 @@ class IProductService(ABC):
         sort_order: int,
         limit: int,
         offset: int,
+        filter: FilterQuery,
         search: str | None = None      
     ) -> list[CatalogProduct]:
         pass
