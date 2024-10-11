@@ -3,7 +3,7 @@ from ninja import Schema, Field
 from src.apps.product.domain.entities import CatalogProduct, DetailProduct
 from src.apps.product.domain.values_object import GenderEnum
 from src.apps.product.domain.entities import CatalogProductSortFieldsEnum
-from src.apps.product.domain.command import GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery, FilterQuery 
+from src.apps.product.domain.commands import GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery, FilterQuery 
 
 
 class CatalogProductQueryParams(Schema):

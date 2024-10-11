@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from src.apps.product.domain.command import FilterQuery # type: ignore
+from src.apps.product.domain.commands import FilterQuery # type: ignore
 from src.apps.product.infrastructure.models import ProductORM
 
 from django.db.models import Q

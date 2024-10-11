@@ -2,7 +2,7 @@
 
 
 from dataclasses import dataclass
-from src.apps.product.domain.command import FilterQuery # type: ignore
+from src.apps.product.domain.commands import FilterQuery # type: ignore
 from src.apps.product.domain.entities import CatalogProduct, DetailProduct
 from src.apps.product.domain.services import IProductService
 from src.apps.product.infrastructure.repositories import IProductRepository

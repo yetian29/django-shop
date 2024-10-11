@@ -1,7 +1,7 @@
 
 
 from abc import ABC, abstractmethod
-from src.apps.product.domain.command import FilterQuery
+from src.apps.product.domain.commands import FilterQuery
 from src.apps.product.domain.entities import CatalogProduct, DetailProduct
 
 

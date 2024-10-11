@@ -3,7 +3,6 @@
 from dataclasses import dataclass, fields
 from enum import Enum
 from src.apps.base.domain.entities import BaseDataField, BaseTime
-from src.apps.product.domain.values_object import GenderEnum
 
 @dataclass
 class BaseProduct(BaseDataField):
