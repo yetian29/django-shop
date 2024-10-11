@@ -1,7 +1,41 @@
 from uuid import UUID
-from ninja import Schema
+from ninja import Schema, Field
 from src.apps.product.domain.entities import CatalogProduct, DetailProduct
+from src.apps.product.domain.values_object import GenderEnum
+from src.apps.product.domain.entities import CatalogProductSortFieldsEnum
+from src.apps.product.domain.command import GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery, FilterQuery 
 
+
+class CatalogProductQueryParams(Schema):
+    search: str | None = None
+    category: list[UUID] = Field(default_factory=list)
+    brands: list[UUID] = Field(default_factory=list)
+    colors: list[UUID] = Field(default_factory=list)
+    sizes: list[UUID] = Field(default_factory=list)
+    gender: GenderEnum | None = None
+    sort_field: CatalogProductSortFieldsEnum = CatalogProductSortFieldsEnum.oid # type: ignore
+    sort_order: SortOrderEnum = SortOrderEnum.asc
+    page: int = 0
+    limit: int = 20
+    
+    def to_command(self) -> GetProductListCommand:
+        return GetProductListCommand(
+            filter=FilterQuery(
+                category=self.category,
+                brands=self.brands,
+                colors=self.colors,
+                sizes=self.sizes,
+                gender=self.gender
+            ),
+            sort=SortQuery(
+                sort_field=self.sort_field.value,
+                sort_order=self.sort_order
+            ),
+            pagination=PaginationQuery(
+                page=self.page,
+                limit=self.limit
+            )
+        )
 
 class CatalogProductOutSchema(Schema):
     oid: UUID
@@ -43,4 +77,3 @@ class DetailProductOutSchema(Schema):
             sizes=[size.name for size in product.sizes],
             quantity=product.quantity
         )
-    

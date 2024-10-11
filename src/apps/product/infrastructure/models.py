@@ -46,7 +46,7 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
             name=self.name,
             price=self.price,
             sold=self.sold,
-            places_sell=self.place_sell.all(),
+            places_sell=list(self.place_sell.all()),
             created_at=self.created_at,
             updated_at=self.updated_at
         )
@@ -58,8 +58,8 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
             description=self.description,
             price=self.price,
             brand=self.brand,
-            colors=self.color.all(),
-            sizes=self.size.all(),
+            colors=list(self.color.all()),
+            sizes=list(self.size.all()),
             quantity=self.quantity
         )
     
