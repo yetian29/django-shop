@@ -7,14 +7,18 @@ from src.apps.product.domain.command import GetProductListCommand, PaginationQue
 
 
 class CatalogProductQueryParams(Schema):
+    # search
     search: str | None = None
+    # filter
     category: list[UUID] = Field(default_factory=list)
     brands: list[UUID] = Field(default_factory=list)
     colors: list[UUID] = Field(default_factory=list)
     sizes: list[UUID] = Field(default_factory=list)
     gender: GenderEnum | None = None
+    # sort
     sort_field: CatalogProductSortFieldsEnum = CatalogProductSortFieldsEnum.oid # type: ignore
     sort_order: SortOrderEnum = SortOrderEnum.asc
+    # pagination
     page: int = 0
     limit: int = 20
     
