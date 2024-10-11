@@ -10,7 +10,7 @@ from src.core.containers import get_container
 
 router = Router()
 
-@router.get("")
+@router.get("", response=ApiResponse[CategoryOutSchema])
 def get_categories_views(request: HttpRequest) -> ApiResponse[CategoryOutSchema]:
     container: punq.Container = get_container()
     use_case: GetCategoriesUseCase = container.resolve(GetCategoriesUseCase)
@@ -18,6 +18,4 @@ def get_categories_views(request: HttpRequest) -> ApiResponse[CategoryOutSchema]
     return ApiResponse(
         data=[CategoryOutSchema.from_entity(cat) for cat in categories]
     )
-
-    
 

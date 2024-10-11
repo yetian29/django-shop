@@ -16,3 +16,4 @@ class CategoryOutSchema(Schema):
             oid=category.oid,
             category=category.catgory
         )
+

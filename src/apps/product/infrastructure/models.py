@@ -1,5 +1,6 @@
 from django.db import models
 
+from src.apps.base.domain.entities import BaseDataField
 from src.apps.base.infrastructure.models import BaseDataFieldORM, BaseTimeORM
 from src.apps.category.infrastructure.models import CategoryORM
 from src.apps.product.domain.entities import CatalogProduct, DetailProduct
@@ -9,18 +10,46 @@ from src.apps.product.domain.values_object import GenderEnum
 class PlaceSellORM(BaseDataFieldORM):
     def __str__(self):
         return self.name
+    
+    def to_entity(self) -> BaseDataField:
+        return BaseDataField(
+            oid=self.oid,
+            name=self.name
+            
+        )
 
 class BrandORM(BaseDataFieldORM):
     def __str__(self):
         return self.name
+    
+    def to_entity(self) -> BaseDataField:
+        return BaseDataField(
+            oid=self.oid,
+            name=self.name
+            
+        )
 
 class ColorORM(BaseDataFieldORM):
     def __str__(self):
         return self.name
     
+    def to_entity(self) -> BaseDataField:
+        return BaseDataField(
+            oid=self.oid,
+            name=self.name
+            
+        )
+    
 class SizeORM(BaseDataFieldORM):
     def __str__(self):
         return self.name
+    
+    def to_entity(self) -> BaseDataField:
+        return BaseDataField(
+            oid=self.oid,
+            name=self.name
+            
+        )
     
 class ProductORM(BaseDataFieldORM, BaseTimeORM):
     # images = models.ImageField()

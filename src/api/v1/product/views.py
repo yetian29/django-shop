@@ -5,9 +5,8 @@ from django.http import HttpRequest
 
 from src.api.v1.product.schemas import CatalogProductOutSchema, CatalogProductQueryParams, DetailProductOutSchema
 from src.api.v1.schemas import ApiResponse, PaginatedListResponse, PaginationOutSchema
-from src.apps.product.domain.commands import GetProductCommand, GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery, FilterQuery # type: ignore
+from src.apps.product.domain.commands import GetProductCommand
 from src.apps.product.domain.use_cases import GetProductListUseCase, GetProductUseCase
-from src.apps.product.domain.values_object import GenderEnum
 from src.core.containers import get_container
 import punq # type: ignore
 
