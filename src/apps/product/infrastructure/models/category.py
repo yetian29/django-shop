@@ -18,5 +18,5 @@ class CategoryORM(BaseOidORM):
     def to_entity(self) -> Category:
         return Category(
             oid=self.oid,
-            catgory=self.category
+            category=self.category
         )

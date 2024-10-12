@@ -85,16 +85,15 @@ class DetailProductOutSchema(Schema):
 
 
 # Category
-
 class CategoryOutSchema(Schema):
     oid: UUID
     category: CategoryEnum
     
     
     @staticmethod
-    def from_entity(category: Category) -> "CategoryOutSchema":
+    def from_entity(entity: Category) -> "CategoryOutSchema":
         return CategoryOutSchema(
-            oid=category.oid,
-            category=category.catgory
+            oid=entity.oid,
+            category=entity.category
         )
 

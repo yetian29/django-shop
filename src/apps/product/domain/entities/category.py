@@ -7,5 +7,5 @@ from src.apps.product.domain.values_object.category import CategoryEnum
 
 @dataclass
 class Category(BaseOid):
-    catgory: CategoryEnum
+    category: CategoryEnum
      
