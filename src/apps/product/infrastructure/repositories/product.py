@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from django.db.models import Q
 
 from src.apps.product.domain.commands.product import FilterQuery
+from src.apps.product.domain.errors.product import ProductNotFoundException
 from src.apps.product.infrastructure.models.product import ProductORM
 
 
@@ -37,8 +38,11 @@ class IProductRepository(ABC):
 
 class PostgresProductRepository(IProductRepository):
     def get_by_id(self, oid: str) -> ProductORM:
-        doc = ProductORM.objects.get(oid=oid)
-        return doc
+        try:
+            product = ProductORM.objects.get(oid=oid)
+        except ProductORM.DoesNotExist:
+            raise ProductNotFoundException
+        return product
 
     
     def _build_find_query(self, filter: FilterQuery, search: str | None = None) -> Q:
