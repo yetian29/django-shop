@@ -1,7 +1,7 @@
-
 from abc import ABC, abstractmethod
 
-from src.apps.category.domain.entities import Category
+from src.apps.product.domain.entities.category import Category
+
 
 
 class ICategoryService(ABC):

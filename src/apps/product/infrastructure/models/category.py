@@ -1,8 +1,9 @@
 from django.db import models
 
-from src.apps.base.infrastructure.models import BaseDataFieldORM, BaseOidORM
-from src.apps.category.domain.entities import Category
-from src.apps.category.domain.values_object import CategoryEnum
+from src.apps.base.infrastructure.models import BaseOidORM
+from src.apps.product.domain.entities.category import Category
+from src.apps.product.domain.values_object.category import CategoryEnum
+
 
 # Create your models here.
 

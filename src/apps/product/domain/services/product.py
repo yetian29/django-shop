@@ -1,8 +1,9 @@
 
 
 from abc import ABC, abstractmethod
-from src.apps.product.domain.commands import FilterQuery
-from src.apps.product.domain.entities import CatalogProduct, DetailProduct
+
+from src.apps.product.domain.commands.product import FilterQuery
+from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct
 
 
 class IProductService(ABC):

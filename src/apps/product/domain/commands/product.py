@@ -4,7 +4,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from uuid import UUID
 
-from src.apps.product.domain.values_object import GenderEnum
+from src.apps.product.domain.values_object.gender import GenderEnum
+
 
 
 @dataclass

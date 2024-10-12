@@ -1,8 +1,10 @@
 
 
 from dataclasses import dataclass
-from src.apps.category.domain.entities import Category
-from src.apps.category.domain.services import ICategoryService
+
+from src.apps.product.domain.entities.category import Category
+from src.apps.product.domain.services.category import ICategoryService
+
 
 @dataclass
 class GetCategoriesUseCase:
@@ -10,4 +12,4 @@ class GetCategoriesUseCase:
 
     def execute(self) -> list[Category]:
         return self.service.get_categories()
-    
+  

@@ -2,10 +2,11 @@
 
 
 from dataclasses import dataclass
-from src.apps.product.domain.commands import FilterQuery # type: ignore
-from src.apps.product.domain.entities import CatalogProduct, DetailProduct
-from src.apps.product.domain.services import IProductService
-from src.apps.product.infrastructure.repositories import IProductRepository
+
+from src.apps.product.domain.commands.product import FilterQuery
+from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct
+from src.apps.product.domain.services.product import IProductService
+from src.apps.product.infrastructure.repositories.product import IProductRepository
 
 @dataclass
 class ProductService(IProductService):

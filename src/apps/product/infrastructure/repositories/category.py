@@ -1,8 +1,7 @@
-
-
 from abc import ABC, abstractmethod
 
-from src.apps.category.infrastructure.models import CategoryORM
+from src.apps.product.infrastructure.models.category import CategoryORM
+
 
 
 class ICategoryRepository(ABC):

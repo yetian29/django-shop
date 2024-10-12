@@ -3,10 +3,11 @@ from ninja import Router, Query
 
 from django.http import HttpRequest
 
-from src.api.v1.product.schemas import CatalogProductOutSchema, CatalogProductQueryParams, DetailProductOutSchema
+from src.api.v1.product.schemas import CatalogProductOutSchema, CatalogProductQueryParams, CategoryOutSchema, DetailProductOutSchema
 from src.api.v1.schemas import ApiResponse, PaginatedListResponse, PaginationOutSchema
-from src.apps.product.domain.commands import GetProductCommand
-from src.apps.product.domain.use_cases import GetProductListUseCase, GetProductUseCase
+from src.apps.product.domain.commands.product import GetProductCommand
+from src.apps.product.domain.use_cases.category import GetCategoriesUseCase
+from src.apps.product.domain.use_cases.product import GetProductListUseCase, GetProductUseCase
 from src.core.containers import get_container
 import punq # type: ignore
 
@@ -46,4 +47,14 @@ def get_product(
     return ApiResponse(
         data=DetailProductOutSchema.from_entity(product)
     )
-    
+
+# category
+@router.get("/categories", response=ApiResponse[CategoryOutSchema])
+def get_categories_views(request: HttpRequest) -> ApiResponse[CategoryOutSchema]:
+    container: punq.Container = get_container()
+    use_case: GetCategoriesUseCase = container.resolve(GetCategoriesUseCase)
+    categories = use_case.execute()
+    return ApiResponse(
+        data=[CategoryOutSchema.from_entity(cat) for cat in categories]
+    )
+ 

@@ -1,8 +1,9 @@
 
 from dataclasses import dataclass
-from src.apps.product.domain.commands import GetProductCommand, GetProductListCommand # type: ignore
-from src.apps.product.domain.entities import CatalogProduct, DetailProduct
-from src.apps.product.domain.services import IProductService
+
+from src.apps.product.domain.commands.product import GetProductCommand, GetProductListCommand
+from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct
+from src.apps.product.domain.services.product import IProductService
 
 @dataclass
 class GetProductUseCase:

@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     # Project apps
     "src.apps.product",
     "src.apps.base",
-    "src.apps.category"
 ]
 
 

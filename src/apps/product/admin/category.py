@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from src.apps.category.infrastructure.models import CategoryORM
+from src.apps.product.infrastructure.models.category import CategoryORM
+
 
 # Register your models here.
 

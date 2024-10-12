@@ -1,9 +1,10 @@
 from uuid import UUID
 from ninja import Schema, Field
-from src.apps.product.domain.entities import CatalogProduct, DetailProduct
-from src.apps.product.domain.values_object import GenderEnum
-from src.apps.product.domain.entities import CatalogProductSortFieldsEnum
-from src.apps.product.domain.commands import GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery, FilterQuery 
+from src.apps.product.domain.commands.product import FilterQuery, GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery
+from src.apps.product.domain.entities.category import Category
+from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct, CatalogProductSortFieldsEnum
+from src.apps.product.domain.values_object.category import CategoryEnum
+from src.apps.product.domain.values_object.gender import GenderEnum
 
 
 class CatalogProductQueryParams(Schema):
@@ -77,7 +78,23 @@ class DetailProductOutSchema(Schema):
             description=product.description,
             price=product.price,
             brand=product.brand.name,
-            colors=[color.name for color in product.colores],
+            colors=[color.name for color in product.colors],
             sizes=[size.name for size in product.sizes],
             quantity=product.quantity
         )
+
+
+# Category
+
+class CategoryOutSchema(Schema):
+    oid: UUID
+    category: CategoryEnum
+    
+    
+    @staticmethod
+    def from_entity(category: Category) -> "CategoryOutSchema":
+        return CategoryOutSchema(
+            oid=category.oid,
+            category=category.catgory
+        )
+
