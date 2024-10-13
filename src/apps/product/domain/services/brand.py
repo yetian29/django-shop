@@ -5,5 +5,5 @@ from src.apps.base.domain.entities import BaseDataField
 
 class IBrandService(ABC):
     @abstractmethod
-    def get_brands(self) -> BaseDataField:
+    def get_brands(self) -> list[BaseDataField]:
         pass

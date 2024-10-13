@@ -7,7 +7,7 @@ from src.apps.product.domain.values_object.gender import GenderEnum
 
 @dataclass
 class GetProductCommand:
-    oid: str
+    oid: UUID
 
 
 class SortOrderEnum(int, Enum):

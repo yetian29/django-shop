@@ -49,7 +49,7 @@ class ProductORM(BaseDataFieldORM, BaseTimeORM):
 
     def to_detail_product_entity(self) -> DetailProduct:
         return DetailProduct(
-            oid=self.oid,
+            oid=str(self.oid),
             name=self.name,
             description=self.description,
             price=self.price,

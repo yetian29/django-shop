@@ -1,8 +1,7 @@
 from uuid import UUID
 
-from ninja import Field, Schema
+from ninja import Field, Schema  # type: ignore
 
-from src.apps.base.domain.entities import BaseDataField
 from src.apps.product.domain.commands.product import (
     FilterQuery,
     GetProductListCommand,
@@ -10,13 +9,11 @@ from src.apps.product.domain.commands.product import (
     SortOrderEnum,
     SortQuery,
 )
-from src.apps.product.domain.entities.category import Category
 from src.apps.product.domain.entities.product import (
     CatalogProduct,
     CatalogProductSortFieldsEnum,
     DetailProduct,
 )
-from src.apps.product.domain.values_object.category import CategoryEnum
 from src.apps.product.domain.values_object.gender import GenderEnum
 
 
@@ -92,23 +89,3 @@ class DetailProductOutSchema(Schema):
             sizes=[size.name for size in entity.sizes],
             quantity=entity.quantity,
         )
-
-
-# Category
-class CategoryOutSchema(Schema):
-    oid: UUID
-    category: CategoryEnum
-
-    @staticmethod
-    def from_entity(entity: Category) -> "CategoryOutSchema":
-        return CategoryOutSchema(oid=entity.oid, category=entity.category)
-
-
-# Brand
-class BrandOutSchema(Schema):
-    oid: UUID
-    name: str
-
-    @staticmethod
-    def from_entity(entity: BaseDataField) -> "BrandOutSchema":
-        return BrandOutSchema(oid=entity.oid, name=entity.name)

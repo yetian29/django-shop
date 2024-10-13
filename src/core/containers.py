@@ -5,6 +5,7 @@ import punq
 from src.apps.product.domain.services.brand import IBrandService
 from src.apps.product.domain.services.category import ICategoryService
 from src.apps.product.domain.services.product import IProductService
+from src.apps.product.domain.use_cases.brand import GetBrandsUseCase
 from src.apps.product.domain.use_cases.category import GetCategoriesUseCase
 from src.apps.product.domain.use_cases.product import (
     GetProductListUseCase,
@@ -46,6 +47,6 @@ def init_container() -> punq.Container:
 
     container.register(IBrandRepository, PostgresBrandRepository)
     container.register(IBrandService, BrandService)
-    container.register(GetCategoriesUseCase)
+    container.register(GetBrandsUseCase)
 
     return container
