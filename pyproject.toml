@@ -15,6 +15,8 @@ punq = "^0.7.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.9"
+polyfactory = "^2.17.0"
+pytest = "^8.3.3"
 
 [build-system]
 requires = ["poetry-core"]
@@ -36,4 +38,11 @@ ignore = [
     "C901",  # too complex
     "W191",  # indentation contains tabs,
     "F401"
+]
+
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = [
+    "test",
 ]
