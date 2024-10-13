@@ -1,5 +1,3 @@
-
-
 from dataclasses import dataclass, field
 from enum import Enum
 from uuid import UUID
@@ -7,14 +5,15 @@ from uuid import UUID
 from src.apps.product.domain.values_object.gender import GenderEnum
 
 
-
 @dataclass
 class GetProductCommand:
     oid: str
 
+
 class SortOrderEnum(int, Enum):
     asc = 1
     desc = -1
+
 
 @dataclass
 class SortQuery:
@@ -26,11 +25,12 @@ class SortQuery:
 class PaginationQuery:
     page: int = 0
     limit: int = 20
-   
-    @property 
+
+    @property
     def offset(self) -> int:
         return self.page * self.limit
-    
+
+
 @dataclass
 class FilterQuery:
     category: list[UUID] = field(default_factory=list)
@@ -38,7 +38,8 @@ class FilterQuery:
     colors: list[UUID] = field(default_factory=list)
     sizes: list[UUID] = field(default_factory=list)
     gender: GenderEnum | None = None
-    
+
+
 @dataclass
 class GetProductListCommand:
     search: str | None = None

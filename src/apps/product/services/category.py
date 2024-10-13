@@ -1,10 +1,9 @@
-
-
 from dataclasses import dataclass
 
 from src.apps.product.domain.entities.category import Category
 from src.apps.product.domain.services.category import ICategoryService
 from src.apps.product.infrastructure.repositories.category import ICategoryRepository
+
 
 @dataclass
 class CategoryService(ICategoryService):

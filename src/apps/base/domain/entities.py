@@ -1,9 +1,7 @@
-
-
-
 from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
+
 
 @dataclass
 class BaseOid:
@@ -14,6 +12,7 @@ class BaseOid:
 class BaseTime:
     created_at: datetime
     updated_at: datetime
+
 
 @dataclass
 class BaseDataField(BaseOid):

@@ -1,5 +1,3 @@
-
-
 from abc import ABC, abstractmethod
 
 from src.apps.product.domain.commands.product import FilterQuery
@@ -10,7 +8,7 @@ class IProductService(ABC):
     @abstractmethod
     def get_by_id(self, oid: str) -> DetailProduct:
         pass
-    
+
     @abstractmethod
     def find_many(
         self,
@@ -19,14 +17,10 @@ class IProductService(ABC):
         limit: int,
         offset: int,
         filter: FilterQuery,
-        search: str | None = None      
+        search: str | None = None,
     ) -> list[CatalogProduct]:
         pass
 
     @abstractmethod
-    def count_many(
-        self,
-        search: str | None = None
-    ) -> int:
+    def count_many(self, search: str | None = None) -> int:
         pass
-        

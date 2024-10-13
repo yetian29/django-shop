@@ -1,8 +1,21 @@
 from uuid import UUID
-from ninja import Schema, Field
-from src.apps.product.domain.commands.product import FilterQuery, GetProductListCommand, PaginationQuery, SortOrderEnum, SortQuery
+
+from ninja import Field, Schema
+
+from src.apps.base.domain.entities import BaseDataField
+from src.apps.product.domain.commands.product import (
+    FilterQuery,
+    GetProductListCommand,
+    PaginationQuery,
+    SortOrderEnum,
+    SortQuery,
+)
 from src.apps.product.domain.entities.category import Category
-from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct, CatalogProductSortFieldsEnum
+from src.apps.product.domain.entities.product import (
+    CatalogProduct,
+    CatalogProductSortFieldsEnum,
+    DetailProduct,
+)
 from src.apps.product.domain.values_object.category import CategoryEnum
 from src.apps.product.domain.values_object.gender import GenderEnum
 
@@ -17,12 +30,12 @@ class CatalogProductQueryParams(Schema):
     sizes: list[UUID] = Field(default_factory=list)
     gender: GenderEnum | None = None
     # sort
-    sort_field: CatalogProductSortFieldsEnum = CatalogProductSortFieldsEnum.oid # type: ignore
+    sort_field: CatalogProductSortFieldsEnum = CatalogProductSortFieldsEnum.oid  # type: ignore
     sort_order: SortOrderEnum = SortOrderEnum.asc
     # pagination
     page: int = 0
     limit: int = 20
-    
+
     def to_command(self) -> GetProductListCommand:
         return GetProductListCommand(
             filter=FilterQuery(
@@ -30,17 +43,14 @@ class CatalogProductQueryParams(Schema):
                 brands=self.brands,
                 colors=self.colors,
                 sizes=self.sizes,
-                gender=self.gender
+                gender=self.gender,
             ),
             sort=SortQuery(
-                sort_field=self.sort_field.value,
-                sort_order=self.sort_order
+                sort_field=self.sort_field.value, sort_order=self.sort_order
             ),
-            pagination=PaginationQuery(
-                page=self.page,
-                limit=self.limit
-            )
+            pagination=PaginationQuery(page=self.page, limit=self.limit),
         )
+
 
 class CatalogProductOutSchema(Schema):
     oid: UUID
@@ -56,9 +66,10 @@ class CatalogProductOutSchema(Schema):
             name=product.name,
             price=product.price,
             sold=product.sold,
-            place_sell=[place_sell.name for place_sell in product.places_sell]
+            place_sell=[place_sell.name for place_sell in product.places_sell],
         )
-    
+
+
 class DetailProductOutSchema(Schema):
     oid: UUID
     name: str
@@ -69,18 +80,17 @@ class DetailProductOutSchema(Schema):
     sizes: list[str]
     quantity: int
 
-
     @staticmethod
-    def from_entity(product: DetailProduct) -> "DetailProductOutSchema":
+    def from_entity(entity: DetailProduct) -> "DetailProductOutSchema":
         return DetailProductOutSchema(
-            oid=product.oid,
-            name=product.name,
-            description=product.description,
-            price=product.price,
-            brand=product.brand.name,
-            colors=[color.name for color in product.colors],
-            sizes=[size.name for size in product.sizes],
-            quantity=product.quantity
+            oid=entity.oid,
+            name=entity.name,
+            description=entity.description,
+            price=entity.price,
+            brand=entity.brand.name,
+            colors=[color.name for color in entity.colors],
+            sizes=[size.name for size in entity.sizes],
+            quantity=entity.quantity,
         )
 
 
@@ -88,12 +98,17 @@ class DetailProductOutSchema(Schema):
 class CategoryOutSchema(Schema):
     oid: UUID
     category: CategoryEnum
-    
-    
+
     @staticmethod
     def from_entity(entity: Category) -> "CategoryOutSchema":
-        return CategoryOutSchema(
-            oid=entity.oid,
-            category=entity.category
-        )
+        return CategoryOutSchema(oid=entity.oid, category=entity.category)
 
+
+# Brand
+class BrandOutSchema(Schema):
+    oid: UUID
+    name: str
+
+    @staticmethod
+    def from_entity(entity: BaseDataField) -> "BrandOutSchema":
+        return BrandOutSchema(oid=entity.oid, name=entity.name)
