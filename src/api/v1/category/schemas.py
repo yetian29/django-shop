@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from ninja import Schema  # type: ignore
+from ninja import Schema
 
 from src.apps.product.domain.entities.category import Category
 from src.apps.product.domain.values_object.category import CategoryEnum

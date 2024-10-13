@@ -1,6 +1,6 @@
-import punq  # type: ignore
-from django.http import HttpRequest  # type: ignore
-from ninja import Router  # type: ignore
+import punq  
+from django.http import HttpRequest  
+from ninja import Router  
 
 from src.api.v1.brand.schemas import BrandOutSchema
 from src.api.v1.schemas import ApiResponse
