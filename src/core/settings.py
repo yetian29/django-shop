@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Project apps
-    "src.apps.product",
     "src.apps.base",
+    "src.apps.product",
+    "src.apps.user"
 ]
 
 
