@@ -37,6 +37,8 @@ def login_user_views(
     command = LoginUserCommand(phone_number=login_in.phone_number, email=login_in.email, code=login_in.code)
     token = use_case.execute(command=command)
     return ApiResponse(
-        data=token
+        data=LoginOutSchema(
+            token=token
+        )
     )
     

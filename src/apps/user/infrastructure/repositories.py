@@ -35,7 +35,7 @@ class PostgresUserRepository(IUserRepository):
             raise UserNotFoundException from error
         else:
             return dto
-            
+
     def create(self, user: UserORM) -> UserORM:
         if user.phone_number:
             try:
@@ -52,7 +52,7 @@ class PostgresUserRepository(IUserRepository):
                     raise UserCreatedNotSuccessException from error
                 else:
                     return dto
-                        
+
     def get_or_create(self, user: UserORM) -> UserORM:
         try:
             dto = self.get_by_phone_number_or_email(phone_number=user.phone_number, email=user.email)
@@ -61,12 +61,10 @@ class PostgresUserRepository(IUserRepository):
             return dto
         else:
             return dto
-        
+
     def update(self, user: UserORM) -> UserORM:
-        try:
-            dto = UserORM.objects.update(user=user)
-        except UserORM.DoesNotExist as error:
-            raise UserNotFoundException from error
-        else:
-            return dto
-        
+        updated_count = UserORM.objects.filter(oid=user.oid).update(is_active=user.is_active, token=user.token)
+        if updated_count == 0:
+            raise UserNotFoundException
+        dto = UserORM.objects.get(oid=user.oid)
+        return dto

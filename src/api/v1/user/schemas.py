@@ -77,7 +77,7 @@ class AuthorizeOutSchema(Schema):
 class LoginInSchema(Schema):
     phone_number: str | None = Field(default=None)
     email: str | None = Field(default=None)
-    code: str | None = Field(default=None)
+    code: str 
     
 class LoginOutSchema(Schema):
     token: UUID 

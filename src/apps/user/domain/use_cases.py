@@ -33,6 +33,6 @@ class LoginUserUseCase:
     def execute(self, command: LoginUserCommand) -> UUID:
         user = self.user_service.get_by_phone_number_or_email(phone_number=command.phone_number, email=command.email)
         self.code_service.validate_code(user=user, code=command.code)
-        token = self.login_service.active_and_genarate_token(user=command.user)
-        self.user_service.update(user)
+        token = self.login_service.active_and_genarate_token(user=user)
+        self.user_service.update(user=user)
         return token

@@ -10,6 +10,6 @@ class AuthorizeUserCommand:
 
 @dataclass
 class LoginUserCommand:
-    phone_number: str
-    email: str
-    code: str
+    phone_number: str | None
+    email: str | None
+    code: str 
