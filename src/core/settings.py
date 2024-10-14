@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # Project apps
     "src.apps.base",
     "src.apps.product",
-    "src.apps.user"
+    "src.apps.user",
 ]
 
 

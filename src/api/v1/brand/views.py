@@ -1,6 +1,6 @@
-import punq  
-from django.http import HttpRequest  
-from ninja import Router  
+import punq
+from django.http import HttpRequest
+from ninja import Router
 
 from src.api.v1.brand.schemas import BrandOutSchema
 from src.api.v1.schemas import ApiResponse

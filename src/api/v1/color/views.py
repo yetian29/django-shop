@@ -1,7 +1,6 @@
-
-import punq  
-from django.http import HttpRequest 
-from ninja import Router  
+import punq
+from django.http import HttpRequest
+from ninja import Router
 
 from src.api.v1.color.schemas import ColorOutSchema
 from src.api.v1.schemas import ApiResponse

@@ -1,10 +1,10 @@
-import punq 
-from django.http import HttpRequest  
-from ninja import Router  
+import punq
+from django.http import HttpRequest
+from ninja import Router
 
 from src.api.v1.schemas import ApiResponse
-from src.api.v1.size.schemas import SizeOutSchema 
-from src.apps.product.domain.use_cases.size import GetSizesUseCase 
+from src.api.v1.size.schemas import SizeOutSchema
+from src.apps.product.domain.use_cases.size import GetSizesUseCase
 from src.core.containers import get_container
 
 router = Router()

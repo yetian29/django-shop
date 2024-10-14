@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from ninja import Schema  
+from ninja import Schema
 
 from src.apps.base.domain.entities import BaseDataField
 

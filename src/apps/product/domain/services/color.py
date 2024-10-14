@@ -1,5 +1,3 @@
-
-
 from abc import ABC, abstractmethod
 
 from src.apps.base.domain.entities import BaseDataField

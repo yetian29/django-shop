@@ -1,31 +1,38 @@
-
-
-from dataclasses import dataclass
-from datetime import datetime, timedelta
 import random
 import uuid
+from dataclasses import dataclass
+from datetime import datetime, timedelta
 
-from src.apps.user.domain.entities import User
-from src.apps.user.domain.services import ICodeService, ILoginService, ISendService, IUserService
 from django.core.cache import cache
 
-from src.apps.user.service.errors import CodeNotFoundException, EqualCodesException, ExpiredCodeException
+from src.apps.user.domain.entities import User
+from src.apps.user.domain.services import (
+    ICodeService,
+    ILoginService,
+    ISendService,
+    IUserService,
+)
+from src.apps.user.infrastructure.models import UserORM
+from src.apps.user.infrastructure.repositories import IUserRepository
+from src.apps.user.service.errors import (
+    CodeNotFoundException,
+    EqualCodesException,
+    ExpiredCodeException,
+)
+
 
 @dataclass
-class DummyCodeService(ICodeService):
+class CodeService(ICodeService):
     def generate_code(self, user: User) -> str:
         code = random.randint(100000, 999999)
         time_out = timedelta(seconds=1000)
-        cached_data = {
-            "code": code,
-            "ttl": datetime.now() + time_out
-        }
+        cached_data = {"code": code, "ttl": datetime.now() + time_out}
         if user.phone_number:
             cache.set(user.phone_number, cached_data, 1000)
         if user.email:
             cache.set(user.email, cached_data, 1000)
         return str(code)
-    
+
     def validate_code(self, user: User, code: str) -> None:
         if user.phone_number:
             cached_data = cache.get(user.phone_number)
@@ -38,9 +45,9 @@ class DummyCodeService(ICodeService):
             if code != cached_data.get("code"):
                 cache.delete(user.phone_number)
                 raise EqualCodesException
-                       
+
             cache.delete(user.phone_number)
-            
+
         if user.email:
             cached_data = cache.get(user.email)
             if not cached_data.get("code"):
@@ -52,27 +59,41 @@ class DummyCodeService(ICodeService):
             if code != cached_data.get("code"):
                 cache.delete(user.email)
                 raise EqualCodesException
-                       
+
             cache.delete(user.email)
 
-       
-class DummySendService(ISendService):
+
+class SendService(ISendService):
     def send_code(self, user: User, code: str) -> None:
         if user.phone_number:
-            print(f"The Code <{code}> has sent to phone number: <{user.phone_number}>")
-        if user.email:
-            print(f"The code <{code}> has sent to email: <{user.email}>")
-            
+            print(
+                f"The Code <{code}> has been sent to phone number: <{user.phone_number}>"
+            )
+        else:
+            if user.email:
+                print(f"The code <{code}> has been sent to email: <{user.email}>")
 
-class DummyLoginService(ILoginService):
+
+class LoginService(ILoginService):
     def active_and_genarate_token(self, user: User) -> uuid.UUID:
         user.token = uuid.uuid4()
         user.is_active = True
-        return user.token        
+        return user.token
 
-class DummyUserService(IUserService):
+
+@dataclass
+class UserService(IUserService):
+    repository: IUserRepository
+
     def get_by_phone_number_or_email(self, user: User) -> User:
-        pass
-     
+        dto = self.repository.get_by_phone_number_or_email(user=user)
+        return dto.to_entity()
+    
+    def create(self, user: User) -> User:
+        dto = self.repository.create(user=user)
+        return dto.to_entity()
+
     def get_or_create(self, user: User) -> User:
-        pass
+        dto = UserORM.from_entity(user)
+        dto = self.repository.get_or_create(user=dto)
+        return dto.to_entity()

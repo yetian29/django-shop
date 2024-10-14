@@ -1,6 +1,5 @@
-
-
 import random
+
 from src.apps.product.domain.commands.product import FilterQuery
 from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct
 from src.apps.product.domain.services.product import IProductService
@@ -12,15 +11,15 @@ class DummyProductService(IProductService):
         return DetailProductFactory.build(oid=oid)
 
     def find_many(
-        self, 
-        sort_field: str, 
-        sort_order: int, 
-        limit: int, 
-        offset: int, 
-        filter: FilterQuery, 
-        search: str | None = None
-        ) -> list[CatalogProduct]:
+        self,
+        sort_field: str,
+        sort_order: int,
+        limit: int,
+        offset: int,
+        filter: FilterQuery,
+        search: str | None = None,
+    ) -> list[CatalogProduct]:
         return [CatalogProductFactory.build() for _ in range(random.randint(0, limit))]
-    
+
     def count_many(self, filter: FilterQuery, search: str | None = None) -> int:
         return random.randint(0, 1000)

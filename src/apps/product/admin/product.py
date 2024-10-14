@@ -20,6 +20,8 @@ class ProductORMAdmin(admin.ModelAdmin):
     ]
     list_display_links = ["oid", "name"]
 
+    search_fields = ["name"]
+
     def get_places_sell(self, obj):
         return ", ".join([place.name for place in obj.place_sell.all()])
 

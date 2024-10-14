@@ -23,17 +23,40 @@ from src.apps.product.infrastructure.repositories.category import (
     ICategoryRepository,
     PostgresCategoryRepository,
 )
-from src.apps.product.infrastructure.repositories.color import IColorRepository, PostgresColorRepository
+from src.apps.product.infrastructure.repositories.color import (
+    IColorRepository,
+    PostgresColorRepository,
+)
 from src.apps.product.infrastructure.repositories.product import (
     IProductRepository,
     PostgresProductRepository,
 )
-from src.apps.product.infrastructure.repositories.size import ISizeRepository, PostgresSizeRepository
+from src.apps.product.infrastructure.repositories.size import (
+    ISizeRepository,
+    PostgresSizeRepository,
+)
 from src.apps.product.services.brand import BrandService
 from src.apps.product.services.category import CategoryService
 from src.apps.product.services.color import ColorService
 from src.apps.product.services.product import ProductService
 from src.apps.product.services.size import SizeService
+from src.apps.user.domain.services import (
+    ICodeService,
+    ILoginService,
+    ISendService,
+    IUserService,
+)
+from src.apps.user.domain.use_cases import AuthorizeUserUseCase, LoginUserUseCase
+from src.apps.user.infrastructure.repositories import (
+    IUserRepository,
+    PostgresUserRepository,
+)
+from src.apps.user.service.user import (
+    CodeService,
+    LoginService,
+    SendService,
+    UserService,
+)
 
 
 @lru_cache(1)
@@ -56,8 +79,7 @@ def init_container() -> punq.Container:
     container.register(IBrandRepository, PostgresBrandRepository)
     container.register(IBrandService, BrandService)
     container.register(GetBrandsUseCase)
-    
-    
+
     container.register(ISizeRepository, PostgresSizeRepository)
     container.register(ISizeService, SizeService)
     container.register(GetSizesUseCase)
@@ -65,4 +87,13 @@ def init_container() -> punq.Container:
     container.register(IColorRepository, PostgresColorRepository)
     container.register(IColorService, ColorService)
     container.register(GetColorsUseCase)
+
+    container.register(IUserRepository, PostgresUserRepository)
+    container.register(ICodeService, CodeService)
+    container.register(ISendService, SendService)
+    container.register(ILoginService, LoginService)
+    container.register(IUserService, UserService)
+    container.register(AuthorizeUserUseCase)
+    container.register(LoginUserUseCase)
+
     return container

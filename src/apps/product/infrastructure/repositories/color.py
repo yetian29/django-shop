@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.apps.product.domain.errors.color import ColorsNotFoundException # type: ignore
+from src.apps.product.domain.errors.color import ColorsNotFoundException  # type: ignore
 from src.apps.product.infrastructure.models.color import ColorORM
 
 

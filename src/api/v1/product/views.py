@@ -1,8 +1,8 @@
 from uuid import UUID
 
-import punq  
-from django.http import HttpRequest  
-from ninja import Query, Router 
+import punq
+from django.http import HttpRequest
+from ninja import Query, Router
 
 from src.api.v1.product.schemas import (
     CatalogProductOutSchema,

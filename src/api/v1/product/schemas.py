@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from ninja import Field, Schema 
+from ninja import Field, Schema
 
 from src.apps.product.domain.commands.product import (
     FilterQuery,
@@ -27,7 +27,7 @@ class CatalogProductQueryParams(Schema):
     sizes: list[UUID] = Field(default_factory=list)
     gender: GenderEnum | None = None
     # sort
-    sort_field: CatalogProductSortFieldsEnum = CatalogProductSortFieldsEnum.oid  
+    sort_field: CatalogProductSortFieldsEnum = CatalogProductSortFieldsEnum.oid
     sort_order: SortOrderEnum = SortOrderEnum.asc
     # pagination
     page: int = 0

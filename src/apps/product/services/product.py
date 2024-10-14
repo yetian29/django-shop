@@ -11,8 +11,8 @@ class ProductService(IProductService):
     repository: IProductRepository
 
     def get_by_id(self, oid: str) -> DetailProduct:
-        dto = self.repository.get_by_id(oid=oid)
-        return dto.to_detail_product_entity()
+        product = self.repository.get_by_id(oid=oid)
+        return product.to_detail_product_entity()
 
     def find_many(
         self,

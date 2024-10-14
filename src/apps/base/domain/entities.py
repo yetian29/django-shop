@@ -11,7 +11,7 @@ class BaseOid:
 @dataclass
 class BaseTime:
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime 
 
 
 @dataclass
