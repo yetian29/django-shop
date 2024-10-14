@@ -3,9 +3,10 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import random
+import uuid
 
 from src.apps.user.domain.entities import User
-from src.apps.user.domain.services import ICodeService, ISendService
+from src.apps.user.domain.services import ICodeService, ILoginService, ISendService, IUserService
 from django.core.cache import cache
 
 from src.apps.user.service.errors import CodeNotFoundException, EqualCodesException, ExpiredCodeException
@@ -61,4 +62,17 @@ class DummySendService(ISendService):
             print(f"The Code <{code}> has sent to phone number: <{user.phone_number}>")
         if user.email:
             print(f"The code <{code}> has sent to email: <{user.email}>")
-        
+            
+
+class DummyLoginService(ILoginService):
+    def active_and_genarate_token(self, user: User) -> uuid.UUID:
+        user.token = uuid.uuid4()
+        user.is_active = True
+        return user.token        
+
+class DummyUserService(IUserService):
+    def get_by_phone_number_or_email(self, user: User) -> User:
+        pass
+     
+    def get_or_create(self, user: User) -> User:
+        pass
