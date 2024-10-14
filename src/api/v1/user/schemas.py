@@ -79,5 +79,40 @@ class LoginInSchema(Schema):
     email: str | None = Field(default=None)
     code: str 
     
+    @field_validator("phone_number")
+    def validate_phone_number(cls, value):       
+        if value == "":
+            value = None
+            return value
+
+        # Loại bỏ khoảng trắng và ký tự đặc biệt
+        cleaned_number = re.sub(r'[\s\-\(\)]', '', value)
+        if not cleaned_number.isdigit():
+            raise ValueError("Số điện thoại chỉ được chứa chữ số")
+        if len(cleaned_number) < 10 or len(cleaned_number) > 10:
+            raise ValueError("Độ dài số điện thoại không hợp lệ")
+        return cleaned_number 
+
+    @field_validator("email")
+    def validate_email(cls, value):
+        if value == "":
+            value = None
+            return value
+        
+        # Một regex đơn giản để kiểm tra email
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValueError("Email không hợp lệ")
+        return value
+    
+    @model_validator(mode="after")
+    def check_phone_or_email(cls, values):
+        phone_number = values.phone_number
+        email = values.email
+        if not phone_number and not email:
+            raise ValueError("Cần cung cấp số điện thoại hoặc email để đăng nhập")
+        if phone_number and email:
+            raise ValueError("Không được phép đăng nhập đồng thời số điện thoại và email")
+        return values
+    
 class LoginOutSchema(Schema):
     token: UUID 
