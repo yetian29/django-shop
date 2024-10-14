@@ -28,13 +28,13 @@ class ILoginService(ABC):
 
 class IUserService(ABC):
     @abstractmethod
-    def get_by_phone_number_or_email(self, user: User) -> User:
+    def get_by_phone_number_or_email(self, phone_number: str, email: str) -> User:
         pass
-    
-    @abstractmethod
-    def create(self, user: User) -> User:
-        pass
-    
+     
     @abstractmethod
     def get_or_create(self, user: User) -> User:
+        pass
+
+    @abstractmethod
+    def update(self, user: User) -> User:
         pass

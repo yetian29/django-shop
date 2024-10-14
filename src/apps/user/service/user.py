@@ -24,14 +24,15 @@ from src.apps.user.service.errors import (
 @dataclass
 class CodeService(ICodeService):
     def generate_code(self, user: User) -> str:
-        code = random.randint(100000, 999999)
+        code = str(random.randint(100000, 999999))
         time_out = timedelta(seconds=1000)
         cached_data = {"code": code, "ttl": datetime.now() + time_out}
         if user.phone_number:
             cache.set(user.phone_number, cached_data, 1000)
-        if user.email:
-            cache.set(user.email, cached_data, 1000)
-        return str(code)
+        else:
+            if user.email:
+                cache.set(user.email, cached_data, 1000)
+        return code
 
     def validate_code(self, user: User, code: str) -> None:
         if user.phone_number:
@@ -43,24 +44,25 @@ class CodeService(ICodeService):
                 cache.delete(user.phone_number)
                 raise ExpiredCodeException
             if code != cached_data.get("code"):
+                print(f"Code: {code}, {cached_data.get("code")}")
                 cache.delete(user.phone_number)
                 raise EqualCodesException
 
             cache.delete(user.phone_number)
+        else:
+            if user.email:
+                cached_data = cache.get(user.email)
+                if not cached_data.get("code"):
+                    cache.delete(user.email)
+                    raise CodeNotFoundException
+                if datetime.now() > cached_data.get("ttl"):
+                    cache.delete(user.email)
+                    raise ExpiredCodeException
+                if code != cached_data.get("code"):
+                    cache.delete(user.email)
+                    raise EqualCodesException
 
-        if user.email:
-            cached_data = cache.get(user.email)
-            if not cached_data.get("code"):
                 cache.delete(user.email)
-                raise CodeNotFoundException
-            if datetime.now() > cached_data.get("ttl"):
-                cache.delete(user.email)
-                raise ExpiredCodeException
-            if code != cached_data.get("code"):
-                cache.delete(user.email)
-                raise EqualCodesException
-
-            cache.delete(user.email)
 
 
 class SendService(ISendService):
@@ -85,15 +87,16 @@ class LoginService(ILoginService):
 class UserService(IUserService):
     repository: IUserRepository
 
-    def get_by_phone_number_or_email(self, user: User) -> User:
-        dto = self.repository.get_by_phone_number_or_email(user=user)
+    def get_by_phone_number_or_email(self, phone_number: str, email: str) -> User:
+        dto = self.repository.get_by_phone_number_or_email(phone_number=phone_number, email=email)
         return dto.to_entity()
     
-    def create(self, user: User) -> User:
-        dto = self.repository.create(user=user)
-        return dto.to_entity()
-
     def get_or_create(self, user: User) -> User:
-        dto = UserORM.from_entity(user)
+        dto = UserORM.from_entity(entity=user)
         dto = self.repository.get_or_create(user=dto)
+        return dto.to_entity()
+    
+    def update(self, user: User) -> User:
+        dto = UserORM.from_entity(entity=user)
+        dto = self.repository.update(user=dto)
         return dto.to_entity()

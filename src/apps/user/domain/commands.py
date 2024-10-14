@@ -10,5 +10,6 @@ class AuthorizeUserCommand:
 
 @dataclass
 class LoginUserCommand:
-    user: User
+    phone_number: str
+    email: str
     code: str

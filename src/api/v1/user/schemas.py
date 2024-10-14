@@ -71,3 +71,13 @@ class AuthorizeInSchema(Schema):
 
 class AuthorizeOutSchema(Schema):
     message: str
+
+
+
+class LoginInSchema(Schema):
+    phone_number: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    code: str | None = Field(default=None)
+    
+class LoginOutSchema(Schema):
+    token: UUID 
