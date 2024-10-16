@@ -18,6 +18,13 @@ class UserORM(BaseOidORM, BaseTimeORM):
     token = models.UUIDField(unique=True, blank=True, null=True, default=None)
     is_active = models.BooleanField(default=False)
 
+    def __str__(self):
+        if self.phone_number:
+            return self.phone_number
+        else:
+            if self.email:
+                return self.email
+
     @staticmethod
     def from_entity(entity: User) -> "UserORM":
         return UserORM(

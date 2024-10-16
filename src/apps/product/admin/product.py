@@ -1,11 +1,17 @@
 from django.contrib import admin
 
 from src.apps.product.infrastructure.models.product import ProductORM
+from src.apps.product.infrastructure.models.review import ReviewORM
 
 # Register your models here.
 
+class ReviewORMInline(admin.TabularInline):
+    model = ReviewORM
 
 class ProductORMAdmin(admin.ModelAdmin):
+    inlines = [
+        ReviewORMInline
+    ]
     list_display = [
         "oid",
         "name",

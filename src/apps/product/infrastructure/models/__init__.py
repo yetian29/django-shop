@@ -4,3 +4,4 @@ from .color import ColorORM
 from .place_sell import PlaceSellORM
 from .product import ProductORM
 from .size import SizeORM
+from .review import ReviewORM
