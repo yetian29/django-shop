@@ -15,6 +15,7 @@ from src.apps.user.domain.services import (
 from src.apps.user.infrastructure.models import UserORM
 from src.apps.user.infrastructure.repositories import IUserRepository
 from src.apps.user.service.errors import (
+    CachedDataNotExistException,
     CodeNotFoundException,
     EqualCodesException,
     ExpiredCodeException,
@@ -36,33 +37,41 @@ class CodeService(ICodeService):
 
     def validate_code(self, user: User, code: str) -> None:
         if user.phone_number:
-            cached_data = cache.get(user.phone_number)
-            if not cached_data.get("code"):
-                cache.delete(user.phone_number)
-                raise CodeNotFoundException
-            if datetime.now() > cached_data.get("ttl"):
-                cache.delete(user.phone_number)
-                raise ExpiredCodeException
-            if code != cached_data.get("code"):
-                print(f"Code: {code}, {cached_data.get("code")}")
-                cache.delete(user.phone_number)
-                raise EqualCodesException
-
-            cache.delete(user.phone_number)
-        else:
-            if user.email:
-                cached_data = cache.get(user.email)
+            try:
+                cached_data = cache.get(user.phone_number)
+            except:
+                raise CachedDataNotExistException
+            else:
                 if not cached_data.get("code"):
-                    cache.delete(user.email)
+                    cache.delete(user.phone_number)
                     raise CodeNotFoundException
                 if datetime.now() > cached_data.get("ttl"):
-                    cache.delete(user.email)
+                    cache.delete(user.phone_number)
                     raise ExpiredCodeException
                 if code != cached_data.get("code"):
-                    cache.delete(user.email)
+                    print(f"Code: {code}, {cached_data.get("code")}")
+                    cache.delete(user.phone_number)
                     raise EqualCodesException
 
-                cache.delete(user.email)
+                cache.delete(user.phone_number)
+        else:
+            if user.email:
+                try:
+                    cached_data = cache.get(user.email)
+                except:
+                    raise CachedDataNotExistException
+                else:
+                    if not cached_data.get("code"):
+                        cache.delete(user.email)
+                        raise CodeNotFoundException
+                    if datetime.now() > cached_data.get("ttl"):
+                        cache.delete(user.email)
+                        raise ExpiredCodeException
+                    if code != cached_data.get("code"):
+                        cache.delete(user.email)
+                        raise EqualCodesException
+
+                    cache.delete(user.email)
 
 
 class SendService(ISendService):
