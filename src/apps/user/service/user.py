@@ -20,6 +20,7 @@ from src.apps.user.service.errors import (
     EqualCodesException,
     ExpiredCodeException,
 )
+from src.helper.errors import fail
 
 
 @dataclass
@@ -37,41 +38,38 @@ class CodeService(ICodeService):
 
     def validate_code(self, user: User, code: str) -> None:
         if user.phone_number:
-            try:
-                cached_data = cache.get(user.phone_number)
-            except:
-                raise CachedDataNotExistException
-            else:
-                if not cached_data.get("code"):
-                    cache.delete(user.phone_number)
-                    raise CodeNotFoundException
-                if datetime.now() > cached_data.get("ttl"):
-                    cache.delete(user.phone_number)
-                    raise ExpiredCodeException
-                if code != cached_data.get("code"):
-                    print(f"Code: {code}, {cached_data.get("code")}")
-                    cache.delete(user.phone_number)
-                    raise EqualCodesException
+            cached_data = cache.get(user.phone_number)
+            if not cached_data:
+                fail(CachedDataNotExistException)
 
+            if not cached_data.get("code"):
                 cache.delete(user.phone_number)
+                fail(CodeNotFoundException)
+            if datetime.now() > cached_data.get("ttl"):
+                cache.delete(user.phone_number)
+                raise ExpiredCodeException
+            if code != cached_data.get("code"):
+                print(f"Code: {code}, {cached_data.get("code")}")
+                cache.delete(user.phone_number)
+                fail(EqualCodesException)
+
+            cache.delete(user.phone_number)
         else:
             if user.email:
-                try:
-                    cached_data = cache.get(user.email)
-                except:
-                    raise CachedDataNotExistException
-                else:
-                    if not cached_data.get("code"):
-                        cache.delete(user.email)
-                        raise CodeNotFoundException
-                    if datetime.now() > cached_data.get("ttl"):
-                        cache.delete(user.email)
-                        raise ExpiredCodeException
-                    if code != cached_data.get("code"):
-                        cache.delete(user.email)
-                        raise EqualCodesException
-
+                cached_data = cache.get(user.email)
+                if not cached_data:
+                    fail(CachedDataNotExistException)
+                if not cached_data.get("code"):
                     cache.delete(user.email)
+                    fail(CodeNotFoundException)
+                if datetime.now() > cached_data.get("ttl"):
+                    cache.delete(user.email)
+                    fail(ExpiredCodeException)
+                if code != cached_data.get("code"):
+                    cache.delete(user.email)
+                    fail(EqualCodesException)
+
+                cache.delete(user.email)
 
 
 class SendService(ISendService):
@@ -87,8 +85,8 @@ class SendService(ISendService):
 
 class LoginService(ILoginService):
     def active_and_genarate_token(self, user: User) -> uuid.UUID:
-        user.token = uuid.uuid4()
         user.is_active = True
+        user.token = uuid.uuid4()
         return user.token
 
 
@@ -97,14 +95,16 @@ class UserService(IUserService):
     repository: IUserRepository
 
     def get_by_phone_number_or_email(self, phone_number: str, email: str) -> User:
-        dto = self.repository.get_by_phone_number_or_email(phone_number=phone_number, email=email)
+        dto = self.repository.get_by_phone_number_or_email(
+            phone_number=phone_number, email=email
+        )
         return dto.to_entity()
-    
+
     def get_or_create(self, user: User) -> User:
         dto = UserORM.from_entity(entity=user)
         dto = self.repository.get_or_create(user=dto)
         return dto.to_entity()
-    
+
     def update(self, user: User) -> User:
         dto = UserORM.from_entity(entity=user)
         dto = self.repository.update(user=dto)

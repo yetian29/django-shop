@@ -1,5 +1,3 @@
-
-
 from abc import ABC, abstractmethod
 from uuid import UUID
 
@@ -10,7 +8,7 @@ class IReviewService(ABC):
     @abstractmethod
     def create_or_update(self, review: Review) -> Review:
         pass
-    
+
     @abstractmethod
     def delete(self, oid: UUID) -> None:
         pass

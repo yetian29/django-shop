@@ -8,6 +8,6 @@ class BaseUserException(BaseDomainException):
 class UserNotFoundException(BaseUserException):
     pass
 
+
 class UserCreatedNotSuccessException(BaseUserException):
     pass
-

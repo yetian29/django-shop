@@ -1,44 +1,42 @@
+import re
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from ninja import Schema, Field
+from ninja import Field, Schema
+from pydantic import field_validator, model_validator
 
 from src.apps.user.domain.entities import User
 
-from pydantic import field_validator, model_validator
-
-import re
 
 class AuthorizeInSchema(Schema):
     phone_number: str | None = Field(default=None)
     email: str | None = Field(default=None)
 
-
     @field_validator("phone_number")
-    def validate_phone_number(cls, value):       
+    def validate_phone_number(cls, value):
         if value == "":
             value = None
             return value
 
         # Loại bỏ khoảng trắng và ký tự đặc biệt
-        cleaned_number = re.sub(r'[\s\-\(\)]', '', value)
+        cleaned_number = re.sub(r"[\s\-\(\)]", "", value)
         if not cleaned_number.isdigit():
             raise ValueError("Số điện thoại chỉ được chứa chữ số")
         if len(cleaned_number) < 10 or len(cleaned_number) > 10:
             raise ValueError("Độ dài số điện thoại không hợp lệ")
-        return cleaned_number 
+        return cleaned_number
 
     @field_validator("email")
     def validate_email(cls, value):
         if value == "":
             value = None
             return value
-        
+
         # Một regex đơn giản để kiểm tra email
         if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
             raise ValueError("Email không hợp lệ")
         return value
-    
+
     @model_validator(mode="after")
     def check_phone_or_email(cls, values):
         phone_number = values.phone_number
@@ -46,10 +44,11 @@ class AuthorizeInSchema(Schema):
         if not phone_number and not email:
             raise ValueError("Cần cung cấp số điện thoại hoặc email để đăng nhập")
         if phone_number and email:
-            raise ValueError("Không được phép đăng nhập đồng thời số điện thoại và email")
+            raise ValueError(
+                "Không được phép đăng nhập đồng thời số điện thoại và email"
+            )
         return values
-    
-        
+
     def to_entity(
         self,
         oid: UUID = uuid4,
@@ -73,37 +72,36 @@ class AuthorizeOutSchema(Schema):
     message: str
 
 
-
 class LoginInSchema(Schema):
     phone_number: str | None = Field(default=None)
     email: str | None = Field(default=None)
-    code: str 
-    
+    code: str
+
     @field_validator("phone_number")
-    def validate_phone_number(cls, value):       
+    def validate_phone_number(cls, value):
         if value == "":
             value = None
             return value
 
         # Loại bỏ khoảng trắng và ký tự đặc biệt
-        cleaned_number = re.sub(r'[\s\-\(\)]', '', value)
+        cleaned_number = re.sub(r"[\s\-\(\)]", "", value)
         if not cleaned_number.isdigit():
             raise ValueError("Số điện thoại chỉ được chứa chữ số")
         if len(cleaned_number) < 10 or len(cleaned_number) > 10:
             raise ValueError("Độ dài số điện thoại không hợp lệ")
-        return cleaned_number 
+        return cleaned_number
 
     @field_validator("email")
     def validate_email(cls, value):
         if value == "":
             value = None
             return value
-        
+
         # Một regex đơn giản để kiểm tra email
         if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
             raise ValueError("Email không hợp lệ")
         return value
-    
+
     @model_validator(mode="after")
     def check_phone_or_email(cls, values):
         phone_number = values.phone_number
@@ -111,8 +109,11 @@ class LoginInSchema(Schema):
         if not phone_number and not email:
             raise ValueError("Cần cung cấp số điện thoại hoặc email để đăng nhập")
         if phone_number and email:
-            raise ValueError("Không được phép đăng nhập đồng thời số điện thoại và email")
+            raise ValueError(
+                "Không được phép đăng nhập đồng thời số điện thoại và email"
+            )
         return values
-    
+
+
 class LoginOutSchema(Schema):
-    token: UUID 
+    token: UUID

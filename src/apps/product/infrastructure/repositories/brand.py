@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from src.apps.product.domain.errors.brand import BrandsNotFoundException  # type: ignore
 from src.apps.product.infrastructure.models.brand import BrandORM
+from src.helper.errors import fail
 
 
 class IBrandRepository(ABC):
@@ -14,7 +15,7 @@ class PostgresBrandRepository(IBrandRepository):
     def get_brands(self) -> list[BrandORM]:
         try:
             brands = BrandORM.objects.all()
-        except BrandORM.DoesNotExist as error:
-            raise BrandsNotFoundException from error
+        except BrandORM.DoesNotExist:
+            fail(BrandsNotFoundException)
         else:
             return list(brands)

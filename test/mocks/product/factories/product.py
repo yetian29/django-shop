@@ -5,10 +5,8 @@ from src.apps.product.domain.commands.product import (
     GetProductListCommand,
 )
 from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct
-from src.apps.user.domain.commands import AuthorizeUserCommand, LoginUserCommand
-from src.apps.user.domain.entities import User
 
-# Product
+
 class CatalogProductFactory(DataclassFactory[CatalogProduct]):
     __model__ = CatalogProduct
 
@@ -23,16 +21,3 @@ class GetPoruductCommandFactory(DataclassFactory[GetProductCommand]):
 
 class GetPoruductListCommandFactory(DataclassFactory[GetProductListCommand]):
     __model__ = GetProductListCommand
-    
-# User
-
-class UserFactory(DataclassFactory[User]):
-    __model__ = User
-
-
-class AuthorizeUserCommandFactory(DataclassFactory[AuthorizeUserCommand]):
-    __model__ = AuthorizeUserCommand
-
-
-class LoginUserCommandFactory(DataclassFactory[LoginUserCommand]):
-    __model__ = LoginUserCommand

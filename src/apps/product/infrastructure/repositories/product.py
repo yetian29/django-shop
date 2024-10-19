@@ -8,6 +8,7 @@ from src.apps.product.domain.errors.product import (
     ProductsNotFoundException,
 )
 from src.apps.product.infrastructure.models.product import ProductORM
+from src.helper.errors import fail
 
 
 class IProductRepository(ABC):
@@ -36,8 +37,8 @@ class PostgresProductRepository(IProductRepository):
     def get_by_id(self, oid: str) -> ProductORM:
         try:
             product = ProductORM.objects.get(oid=oid)
-        except ProductORM.DoesNotExist as error:
-            raise ProductNotFoundException from error
+        except ProductORM.DoesNotExist:
+            fail(ProductNotFoundException)
         else:
             return product
 
@@ -82,8 +83,8 @@ class PostgresProductRepository(IProductRepository):
             products = ProductORM.objects.filter(query).order_by(order_by_field)[
                 offset : offset + limit
             ]
-        except ProductORM.DoesNotExist as error:
-            raise ProductsNotFoundException from error
+        except ProductORM.DoesNotExist:
+            fail(ProductsNotFoundException)
 
         else:
             return list(products)
@@ -92,7 +93,7 @@ class PostgresProductRepository(IProductRepository):
         query = self._build_find_query(filter=filter, search=search)
         try:
             count = ProductORM.objects.filter(query).count()
-        except ProductORM.DoesNotExist as error:
-            raise ProductsNotFoundException from error
+        except ProductORM.DoesNotExist:
+            fail(ProductsNotFoundException)
         else:
             return count

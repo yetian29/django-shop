@@ -5,13 +5,13 @@ from src.apps.product.infrastructure.models.review import ReviewORM
 
 # Register your models here.
 
+
 class ReviewORMInline(admin.TabularInline):
     model = ReviewORM
 
+
 class ProductORMAdmin(admin.ModelAdmin):
-    inlines = [
-        ReviewORMInline
-    ]
+    inlines = [ReviewORMInline]
     list_display = [
         "oid",
         "name",

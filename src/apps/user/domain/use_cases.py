@@ -28,10 +28,11 @@ class LoginUserUseCase:
     code_service: ICodeService
     login_service: ILoginService
     user_service: IUserService
-    
 
     def execute(self, command: LoginUserCommand) -> UUID:
-        user = self.user_service.get_by_phone_number_or_email(phone_number=command.phone_number, email=command.email)
+        user = self.user_service.get_by_phone_number_or_email(
+            phone_number=command.phone_number, email=command.email
+        )
         self.code_service.validate_code(user=user, code=command.code)
         token = self.login_service.active_and_genarate_token(user=user)
         self.user_service.update(user=user)

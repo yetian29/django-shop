@@ -12,4 +12,4 @@ class AuthorizeUserCommand:
 class LoginUserCommand:
     phone_number: str | None
     email: str | None
-    code: str 
+    code: str

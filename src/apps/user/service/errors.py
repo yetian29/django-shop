@@ -16,5 +16,6 @@ class ExpiredCodeException(BaseCodeException):
 class EqualCodesException(BaseCodeException):
     pass
 
+
 class CachedDataNotExistException(BaseCodeException):
     pass
