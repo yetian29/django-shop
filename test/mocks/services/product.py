@@ -3,7 +3,7 @@ import random
 from src.apps.product.domain.commands.product import FilterQuery
 from src.apps.product.domain.entities.product import CatalogProduct, DetailProduct
 from src.apps.product.domain.services.product import IProductService
-from test.mocks.product.factories.product import (
+from test.mocks.factories.product import (
     CatalogProductFactory,
     DetailProductFactory,
 )

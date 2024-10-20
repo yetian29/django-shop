@@ -4,7 +4,7 @@ from src.apps.product.domain.use_cases.product import (
     GetProductListUseCase,
     GetProductUseCase,
 )
-from test.mocks.product.factories import (
+from test.mocks.factories.product import (
     GetPoruductCommandFactory,
     GetPoruductListCommandFactory,
 )

@@ -17,9 +17,9 @@ class AuthorizeUserUseCase:
     user_service: IUserService
 
     def execute(self, command: AuthorizeUserCommand) -> str:
-        self.user_service.get_or_create(user=command.user)
-        code = self.code_service.generate_code(user=command.user)
-        self.send_service.send_code(user=command.user, code=code)
+        user = self.user_service.get_or_create(user=command.user)
+        code = self.code_service.generate_code(user=user)
+        self.send_service.send_code(user=user, code=code)
         return code
 
 
