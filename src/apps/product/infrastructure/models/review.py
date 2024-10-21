@@ -7,6 +7,6 @@ from src.apps.user.infrastructure.models import UserORM
 
 class ReviewORM(BaseOidORM, BaseTimeORM):
     user = models.ForeignKey(UserORM, on_delete=models.CASCADE)
-    product = models.ForeignKey(ProductORM, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductORM, on_delete=models.CASCADE, related_name="reviews_product")
     rating = models.PositiveSmallIntegerField(default=1)
     content = models.TextField(blank=True)
