@@ -6,10 +6,20 @@ from src.apps.product.domain.use_cases.product import (
     GetProductListUseCase,
     GetProductUseCase,
 )
-from src.apps.user.domain.services import ICodeService, ILoginService, ISendService, IUserService
+from src.apps.user.domain.services import (
+    ICodeService,
+    ILoginService,
+    ISendService,
+    IUserService,
+)
 from src.apps.user.domain.use_cases import AuthorizeUserUseCase, LoginUserUseCase
 from test.mocks.services.product import DummyProductService
-from test.mocks.services.user import DummyCodeService, DummyLoginService, DummySendService, DummyUserService
+from test.mocks.services.user import (
+    DummyCodeService,
+    DummyLoginService,
+    DummySendService,
+    DummyUserService,
+)
 
 
 @pytest.fixture(scope="session")

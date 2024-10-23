@@ -1,8 +1,13 @@
-
 from abc import ABC, abstractmethod
 
 from src.apps.product.domain.entities.product import DetailProduct
-from src.apps.product.domain.errors.review import ReviewAlreadyExistException, ReviewNotFoundException, ReviewNotFoundToDeleteException, ReviewNotFoundToUpdateException, ReviewsNotFoundException
+from src.apps.product.domain.errors.review import (
+    ReviewAlreadyExistException,
+    ReviewNotFoundException,
+    ReviewNotFoundToDeleteException,
+    ReviewNotFoundToUpdateException,
+    ReviewsNotFoundException,
+)
 from src.apps.product.infrastructure.models.review import ReviewORM
 from src.apps.user.domain.entities import User
 from src.helper.errors import fail
@@ -20,28 +25,26 @@ class IReviewRepository(ABC):
     @abstractmethod
     def delete(self, oid: str) -> None:
         pass
-    
+
     @abstractmethod
     def get_by_id(self, oid: str) -> ReviewORM:
         pass
 
     @abstractmethod
     def get_review_list(
-        self, 
+        self,
         product: DetailProduct,
         sort_field: str,
         sort_order: int,
         limit: int,
-        offset: int
-        ) -> list[ReviewORM]:
+        offset: int,
+    ) -> list[ReviewORM]:
         pass
 
     @abstractmethod
-    def count_many(
-        self,
-        product: DetailProduct
-    ) -> int:
+    def count_many(self, product: DetailProduct) -> int:
         pass
+
 
 class PostgresReviewRepository(IReviewRepository):
     def get_by_id(self, oid: str) -> ReviewORM:
@@ -52,7 +55,6 @@ class PostgresReviewRepository(IReviewRepository):
         else:
             return dto
 
-        
     def create(self, review: ReviewORM) -> ReviewORM:
         dto = self.get_by_id(oid=review.oid)
         if not dto:
@@ -63,8 +65,7 @@ class PostgresReviewRepository(IReviewRepository):
                 rating=review.rating,
                 content=review.content,
                 created_at=review.created_at,
-                updated_at=review.updated_at
-                
+                updated_at=review.updated_at,
             )
             return dto
         fail(ReviewAlreadyExistException)
@@ -75,39 +76,33 @@ class PostgresReviewRepository(IReviewRepository):
             dto = ReviewORM.objects.update(
                 rating=review.rating,
                 content=review.content,
-                updated_at=review.updated_at 
+                updated_at=review.updated_at,
             )
             return dto
         fail(ReviewNotFoundToUpdateException)
-            
-    
+
     def delete(self, oid: str) -> None:
         try:
             ReviewORM.objects.delete(oid)
         except ReviewORM.DoesNotExist:
             fail(ReviewNotFoundToDeleteException)
-        
 
     def get_review_list(
-        self, 
-        product: DetailProduct, 
-        sort_field: str, 
-        sort_order: int, 
-        limit: int, 
-        offset: int
-        ) -> list[ReviewORM]:
+        self,
+        product: DetailProduct,
+        sort_field: str,
+        sort_order: int,
+        limit: int,
+        offset: int,
+    ) -> list[ReviewORM]:
         sort_direction = "-" if sort_order == -1 else ""
         order_by_field = f"{sort_direction}{sort_field}"
 
-        
         try:
-            reviews = ReviewORM.objects.filter(product).order_by(order_by_field)[offset: offset + limit]
+            reviews = ReviewORM.objects.filter(product).order_by(order_by_field)[
+                offset : offset + limit
+            ]
         except ReviewORM.DoesNotExist:
             fail(ReviewsNotFoundException)
-        
-        else: 
+        else:
             return list(reviews)
-
-
-        
-

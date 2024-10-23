@@ -80,7 +80,7 @@ class PostgresProductRepository(IProductRepository):
 
         try:
             products = ProductORM.objects.filter(query).order_by(order_by_field)[
-                offset: offset + limit
+                offset : offset + limit
             ]
         except ProductORM.DoesNotExist:
             fail(ProductsNotFoundException)

@@ -22,14 +22,10 @@ class IReviewService(ABC):
         sort_field: str,
         sort_order: int,
         limit: int,
-        offset: int
+        offset: int,
     ) -> list[Review]:
         pass
-    
-    @abstractmethod
-    def count_many(
-        self,
-        product: DetailProduct
-    ) -> int:
-        pass
 
+    @abstractmethod
+    def count_many(self, product: DetailProduct) -> int:
+        pass

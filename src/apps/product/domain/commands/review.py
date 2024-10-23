@@ -11,9 +11,11 @@ from src.apps.user.domain.entities import User
 class CreateReviewCommand:
     review: Review
 
+
 @dataclass
 class UpdateReviewCommand:
     review: Review
+
 
 @dataclass
 class DeleteReviewCommand:
@@ -25,4 +27,3 @@ class GetReviewListCommand:
     product: DetailProduct
     sort: SortQuery
     pagination: PaginationQuery
-    
