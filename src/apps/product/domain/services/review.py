@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
+from src.apps.product.domain.entities.product import DetailProduct
 from src.apps.product.domain.entities.review import Review
+from src.apps.user.domain.entities import User
 
 
 class IReviewService(ABC):
@@ -12,3 +14,22 @@ class IReviewService(ABC):
     @abstractmethod
     def delete(self, oid: UUID) -> None:
         pass
+
+    @abstractmethod
+    def get_review_list(
+        self,
+        product: DetailProduct,
+        sort_field: str,
+        sort_order: int,
+        limit: int,
+        offset: int
+    ) -> list[Review]:
+        pass
+    
+    @abstractmethod
+    def count_many(
+        self,
+        product: DetailProduct
+    ) -> int:
+        pass
+

@@ -43,7 +43,6 @@ class PostgresProductRepository(IProductRepository):
             return product
 
     def _build_find_query(self, filter: FilterQuery, search: str | None = None) -> Q:
-        print(f"Filter: {filter}")
         query = Q()
         if filter:
             if filter.category:
@@ -81,7 +80,7 @@ class PostgresProductRepository(IProductRepository):
 
         try:
             products = ProductORM.objects.filter(query).order_by(order_by_field)[
-                offset : offset + limit
+                offset: offset + limit
             ]
         except ProductORM.DoesNotExist:
             fail(ProductsNotFoundException)
