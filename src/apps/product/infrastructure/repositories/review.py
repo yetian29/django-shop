@@ -9,7 +9,6 @@ from src.apps.product.domain.errors.review import (
     ReviewsNotFoundException,
 )
 from src.apps.product.infrastructure.models.review import ReviewORM
-from src.apps.user.domain.entities import User
 from src.helper.errors import fail
 
 
@@ -99,10 +98,18 @@ class PostgresReviewRepository(IReviewRepository):
         order_by_field = f"{sort_direction}{sort_field}"
 
         try:
-            reviews = ReviewORM.objects.filter(product).order_by(order_by_field)[
+            reviews = ReviewORM.objects.filter(id=product.oid).order_by(order_by_field)[
                 offset : offset + limit
             ]
         except ReviewORM.DoesNotExist:
             fail(ReviewsNotFoundException)
         else:
             return list(reviews)
+
+    def count_many(self, product: DetailProduct) -> int:
+        try:
+            count = ReviewORM.objects.filter(id=product.oid).count()
+        except ReviewORM.DoesNotExist:
+            fail(ReviewsNotFoundException)
+        else:
+            return count
