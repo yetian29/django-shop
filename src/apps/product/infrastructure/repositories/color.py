@@ -17,4 +17,3 @@ class PostgresColorRepository(IColorRepository):
         if not colors.exists():
             fail(ColorsNotFoundException)
         return list(colors)
-        

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from src.apps.user.domain.errors import (
@@ -9,7 +10,7 @@ from src.apps.user.domain.errors import (
 )
 from src.apps.user.infrastructure.models import UserORM
 from src.helper.errors import fail
-from django.core.exceptions import ObjectDoesNotExist
+
 
 class IUserRepository(ABC):
     @abstractmethod
@@ -41,8 +42,8 @@ class PostgresUserRepository(IUserRepository):
     def create(self, user: UserORM) -> UserORM:
         if user.phone_number:
             dto = UserORM.objects.create(phone_number=user.phone_number)
-            if not dto: 
-                fail(UserCreatedNotSuccessException)           
+            if not dto:
+                fail(UserCreatedNotSuccessException)
             return dto
         else:
             if user.email:
@@ -70,4 +71,3 @@ class PostgresUserRepository(IUserRepository):
         dto.token = user.token
         dto.save()
         return dto
-

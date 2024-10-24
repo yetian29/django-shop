@@ -41,11 +41,10 @@ class PostgresReviewRepository(IReviewRepository):
         dto = ReviewORM.objects.get(oid)
         return dto
 
-         
     def create_or_update(self, review: ReviewORM) -> ReviewORM:
         if not review.is_authenticated():
             fail(UserNotAuthenticatedException)
-            
+
         dto = self.get_by_id(oid=review.oid)
         if not dto:
             dto = ReviewORM.objects.create(
@@ -53,31 +52,32 @@ class PostgresReviewRepository(IReviewRepository):
                 user=review.user,
                 product=review.product,
                 rating=review.rating,
-                content=review.content                
+                content=review.content,
             )
-        
+
         else:
             dto.rating = review.rating
             dto.content = review.content
             dto.save()
-        
+
         return dto
-    
+
     def delete(self, oid: str) -> None:
         ReviewORM.objects.filter(id=oid).delete()
-    
 
     def get_review_list(
-        self, 
-        product: DetailProduct, 
-        sort_field: str, 
-        sort_order: int, 
-        limit: int, 
-        offset: int
-    ) -> list[ReviewORM]:   
+        self,
+        product: DetailProduct,
+        sort_field: str,
+        sort_order: int,
+        limit: int,
+        offset: int,
+    ) -> list[ReviewORM]:
         sort_direction = "-" if sort_order == -1 else ""
         order_by_field = f"{sort_direction}{sort_field}"
-        reviews = ReviewORM.objects.filter(id=product.oid).order_by(order_by_field)[offset: offset + limit]
+        reviews = ReviewORM.objects.filter(id=product.oid).order_by(order_by_field)[
+            offset : offset + limit
+        ]
         if not reviews.exists:
             fail(ReviewsNotFoundException)
         return list(reviews)
@@ -85,21 +85,5 @@ class PostgresReviewRepository(IReviewRepository):
     def count_many(self, product: DetailProduct) -> int:
         count = ReviewORM.objects.filter(id=product.oid).count()
         if not count:
-            fail(ReviewsNotFoundException) 
+            fail(ReviewsNotFoundException)
         return count
-
-     
-            
-
-
-        
-        
-    
-            
-        
-        
-            
-            
-        
-        
-        

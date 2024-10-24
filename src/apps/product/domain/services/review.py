@@ -7,7 +7,7 @@ from src.apps.product.domain.entities.review import Review
 
 class IReviewService(ABC):
     @abstractmethod
-    def create_or_update(self,  review: Review) -> Review:
+    def create_or_update(self, review: Review) -> Review:
         pass
 
     @abstractmethod

@@ -8,16 +8,13 @@ from src.apps.user.infrastructure.models import UserORM
 
 class ReviewORM(BaseOidORM, BaseTimeORM):
     user = models.ForeignKey(UserORM, on_delete=models.CASCADE)
-    product = models.ForeignKey(
-        ProductORM, on_delete=models.CASCADE
-    )
+    product = models.ForeignKey(ProductORM, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(default=1)
     content = models.TextField(blank=True)
 
-
     def is_authenticated(self) -> bool:
-        return self.user.token is not None 
-    
+        return self.user.token is not None
+
     @staticmethod
     def from_entity(entity: Review) -> "ReviewORM":
         return ReviewORM(
@@ -27,7 +24,7 @@ class ReviewORM(BaseOidORM, BaseTimeORM):
             rating=entity.rating,
             content=entity.content,
             created_at=entity.created_at,
-            updated_at=entity.updated_at
+            updated_at=entity.updated_at,
         )
 
     def to_entity(self) -> Review:
@@ -38,5 +35,5 @@ class ReviewORM(BaseOidORM, BaseTimeORM):
             rating=self.rating,
             content=self.content,
             created_at=self.created_at,
-            updated_at=self.updated_at 
+            updated_at=self.updated_at,
         )

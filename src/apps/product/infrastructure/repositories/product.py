@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from src.apps.product.domain.commands.product import FilterQuery
@@ -9,7 +10,6 @@ from src.apps.product.domain.errors.product import (
 )
 from src.apps.product.infrastructure.models.product import ProductORM
 from src.helper.errors import fail
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class IProductRepository(ABC):
@@ -91,4 +91,3 @@ class PostgresProductRepository(IProductRepository):
         if not count:
             fail(ProductsNotFoundException)
         return count
-        

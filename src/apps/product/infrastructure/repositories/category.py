@@ -14,6 +14,6 @@ class ICategoryRepository(ABC):
 class PostgresCategoryRepository(ICategoryRepository):
     def get_categories(self) -> list[CategoryORM]:
         categories = CategoryORM.objects.all()
-        if not categories.exists(): 
+        if not categories.exists():
             fail(CategoriesNotFoundException)
         return list(categories)
