@@ -5,10 +5,11 @@ from django.db.models import Q
 from src.apps.user.domain.errors import (
     UserCreatedNotSuccessException,
     UserNotFoundException,
+    UserNotFoundToUpdateException,
 )
 from src.apps.user.infrastructure.models import UserORM
 from src.helper.errors import fail
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class IUserRepository(ABC):
     @abstractmethod
@@ -32,27 +33,23 @@ class PostgresUserRepository(IUserRepository):
     def get_by_phone_number_or_email(self, phone_number: str, email: str) -> UserORM:
         try:
             dto = UserORM.objects.get(Q(phone_number=phone_number) | Q(email=email))
-        except UserORM.DoesNotExist:
+        except ObjectDoesNotExist:
             fail(UserNotFoundException)
         else:
             return dto
 
     def create(self, user: UserORM) -> UserORM:
         if user.phone_number:
-            try:
-                dto = UserORM.objects.create(phone_number=user.phone_number)
-            except UserORM.DoesNotExist:
-                fail(UserCreatedNotSuccessException)
-            else:
-                return dto
+            dto = UserORM.objects.create(phone_number=user.phone_number)
+            if not dto: 
+                fail(UserCreatedNotSuccessException)           
+            return dto
         else:
             if user.email:
-                try:
-                    dto = UserORM.objects.create(email=user.email)
-                except UserORM.DoesNotExist:
+                dto = UserORM.objects.create(email=user.email)
+                if not dto:
                     fail(UserCreatedNotSuccessException)
-                else:
-                    return dto
+                return dto
 
     def get_or_create(self, user: UserORM) -> UserORM:
         try:
@@ -66,10 +63,11 @@ class PostgresUserRepository(IUserRepository):
             return dto
 
     def update(self, user: UserORM) -> UserORM:
-        updated_count = UserORM.objects.filter(oid=user.oid).update(
-            is_active=user.is_active, token=user.token
-        )
-        if updated_count == 0:
-            fail(UserNotFoundException)
         dto = UserORM.objects.get(oid=user.oid)
+        if not dto:
+            fail(UserNotFoundToUpdateException)
+        dto.is_active = user.is_active
+        dto.token = user.token
+        dto.save()
         return dto
+

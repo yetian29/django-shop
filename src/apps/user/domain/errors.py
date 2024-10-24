@@ -15,3 +15,6 @@ class UserCreatedNotSuccessException(BaseUserException):
 
 class UserNotAuthenticatedException(BaseUserException):
     pass
+
+class UserNotFoundToUpdateException(BaseUserException):
+    pass
