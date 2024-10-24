@@ -13,9 +13,7 @@ class ISizeRepository(ABC):
 
 class PostgresSizeRepository(ISizeRepository):
     def get_sizes(self) -> list[SizeORM]:
-        try:
-            sizes = SizeORM.objects.all()
-        except SizeORM.DoesNotExist:
+        sizes = SizeORM.objects.all()
+        if not sizes.exists():
             fail(SizesNotFoundException)
-        else:
-            return list(sizes)
+        return list(sizes)

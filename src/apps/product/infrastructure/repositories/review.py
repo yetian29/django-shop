@@ -1,24 +1,14 @@
 from abc import ABC, abstractmethod
 
 from src.apps.product.domain.entities.product import DetailProduct
-from src.apps.product.domain.errors.review import (
-    ReviewAlreadyExistException,
-    ReviewNotFoundException,
-    ReviewNotFoundToDeleteException,
-    ReviewNotFoundToUpdateException,
-    ReviewsNotFoundException,
-)
 from src.apps.product.infrastructure.models.review import ReviewORM
+from src.apps.user.domain.errors import UserNotAuthenticatedException
 from src.helper.errors import fail
 
 
 class IReviewRepository(ABC):
     @abstractmethod
-    def create(sef, review: ReviewORM) -> ReviewORM:
-        pass
-
-    @abstractmethod
-    def update(self, review: ReviewORM) -> ReviewORM:
+    def create_or_update(sef, review: ReviewORM) -> ReviewORM:
         pass
 
     @abstractmethod
@@ -26,7 +16,7 @@ class IReviewRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_id(self, oid: str) -> ReviewORM:
+    def get_by_id(self, oid: str) -> ReviewORM | None:
         pass
 
     @abstractmethod
@@ -46,70 +36,63 @@ class IReviewRepository(ABC):
 
 
 class PostgresReviewRepository(IReviewRepository):
-    def get_by_id(self, oid: str) -> ReviewORM:
-        try:
-            dto = ReviewORM.objects.get(oid)
-        except ReviewORM.DoesNotExist:
-            fail(ReviewNotFoundException)
-        else:
-            return dto
+    def get_by_id(self, oid: str) -> ReviewORM | None:
+        dto = ReviewORM.objects.get(oid)
+        return dto
 
-    def create(self, review: ReviewORM) -> ReviewORM:
-        dto = self.get_by_id(oid=review.oid)
-        if not dto:
+         
+    def create_or_update(self, review: ReviewORM) -> ReviewORM:
+        if not review.is_authenticated():
+            fail(UserNotAuthenticatedException)
+            
+            
+        if not self.get_by_id(oid=review.oid):
             dto = ReviewORM.objects.create(
                 oid=review.oid,
                 user=review.user,
                 product=review.product,
                 rating=review.rating,
-                content=review.content,
-                created_at=review.created_at,
-                updated_at=review.updated_at,
+                content=review.content                
             )
-            return dto
-        fail(ReviewAlreadyExistException)
-
-    def update(self, review: ReviewORM) -> ReviewORM:
-        dto = self.get_by_id(oid=review.oid)
-        if dto:
-            dto = ReviewORM.objects.update(
-                rating=review.rating,
-                content=review.content,
-                updated_at=review.updated_at,
-            )
-            return dto
-        fail(ReviewNotFoundToUpdateException)
-
+        
+        else:
+            dto = ReviewORM.objects.filter(id=review.oid).update(rating=review.rating, content=review.content)
+        
+        return dto
+    
     def delete(self, oid: str) -> None:
-        try:
-            ReviewORM.objects.delete(oid)
-        except ReviewORM.DoesNotExist:
-            fail(ReviewNotFoundToDeleteException)
+        ReviewORM.objects.filter(id=oid).delete()
+    
 
     def get_review_list(
-        self,
-        product: DetailProduct,
-        sort_field: str,
-        sort_order: int,
-        limit: int,
-        offset: int,
-    ) -> list[ReviewORM]:
+        self, 
+        product: DetailProduct, 
+        sort_field: str, 
+        sort_order: int, 
+        limit: int, 
+        offset: int
+    ) -> list[ReviewORM]:   
         sort_direction = "-" if sort_order == -1 else ""
         order_by_field = f"{sort_direction}{sort_field}"
-
-        try:
-            reviews = ReviewORM.objects.filter(id=product.oid).order_by(order_by_field)[
-                offset : offset + limit
-            ]
-        except ReviewORM.DoesNotExist:
-            fail(ReviewsNotFoundException)
-        else:
-            return list(reviews)
+        reviews = ReviewORM.objects.filter(id=product.oid).order_by(order_by_field)[offset: offset + limit]
+        return list(reviews)
 
     def count_many(self, product: DetailProduct) -> int:
-        try:
-            count = ReviewORM.objects.filter(id=product.oid).count()
-        except ReviewORM.DoesNotExist:
-            fail(ReviewsNotFoundException)
-        else:
-            return count
+        count = ReviewORM.objects.filter(id=product.oid).count()
+        return count
+
+     
+            
+
+
+        
+        
+    
+            
+        
+        
+            
+            
+        
+        
+        

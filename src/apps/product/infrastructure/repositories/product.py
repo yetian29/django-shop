@@ -9,6 +9,7 @@ from src.apps.product.domain.errors.product import (
 )
 from src.apps.product.infrastructure.models.product import ProductORM
 from src.helper.errors import fail
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class IProductRepository(ABC):
@@ -37,7 +38,7 @@ class PostgresProductRepository(IProductRepository):
     def get_by_id(self, oid: str) -> ProductORM:
         try:
             product = ProductORM.objects.get(oid=oid)
-        except ProductORM.DoesNotExist:
+        except ObjectDoesNotExist:
             fail(ProductNotFoundException)
         else:
             return product
@@ -77,22 +78,17 @@ class PostgresProductRepository(IProductRepository):
         query = self._build_find_query(filter=filter, search=search)
         sort_direction = "-" if sort_order == -1 else ""
         order_by_field = f"{sort_direction}{sort_field}"
-
-        try:
-            products = ProductORM.objects.filter(query).order_by(order_by_field)[
-                offset : offset + limit
-            ]
-        except ProductORM.DoesNotExist:
+        products = ProductORM.objects.filter(query).order_by(order_by_field)[
+            offset : offset + limit
+        ]
+        if not products.exists():
             fail(ProductsNotFoundException)
-
-        else:
-            return list(products)
+        return list(products)
 
     def count_many(self, filter: FilterQuery, search: str | None = None) -> int:
         query = self._build_find_query(filter=filter, search=search)
-        try:
-            count = ProductORM.objects.filter(query).count()
-        except ProductORM.DoesNotExist:
+        count = ProductORM.objects.filter(query).count()
+        if not count:
             fail(ProductsNotFoundException)
-        else:
-            return count
+        return count
+        

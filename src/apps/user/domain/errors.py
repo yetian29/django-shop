@@ -11,3 +11,7 @@ class UserNotFoundException(BaseUserException):
 
 class UserCreatedNotSuccessException(BaseUserException):
     pass
+
+
+class UserNotAuthenticatedException(BaseUserException):
+    pass

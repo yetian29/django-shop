@@ -13,9 +13,8 @@ class IColorRepository(ABC):
 
 class PostgresColorRepository(IColorRepository):
     def get_colors(self) -> list[ColorORM]:
-        try:
-            colors = ColorORM.objects.all()
-        except ColorORM.DoesNotExist:
+        colors = ColorORM.objects.all()
+        if not colors.exists():
             fail(ColorsNotFoundException)
-        else:
-            return list(colors)
+        return list(colors)
+        

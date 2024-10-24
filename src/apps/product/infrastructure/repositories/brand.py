@@ -13,9 +13,7 @@ class IBrandRepository(ABC):
 
 class PostgresBrandRepository(IBrandRepository):
     def get_brands(self) -> list[BrandORM]:
-        try:
-            brands = BrandORM.objects.all()
-        except BrandORM.DoesNotExist:
+        brands = BrandORM.objects.all()
+        if not brands.exists(): 
             fail(BrandsNotFoundException)
-        else:
-            return list(brands)
+        return list(brands)

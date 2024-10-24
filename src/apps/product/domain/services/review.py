@@ -3,12 +3,11 @@ from uuid import UUID
 
 from src.apps.product.domain.entities.product import DetailProduct
 from src.apps.product.domain.entities.review import Review
-from src.apps.user.domain.entities import User
 
 
 class IReviewService(ABC):
     @abstractmethod
-    def create_or_update(self, review: Review) -> Review:
+    def create_or_update(self,  review: Review) -> Review:
         pass
 
     @abstractmethod
