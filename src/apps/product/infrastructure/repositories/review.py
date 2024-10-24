@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from src.apps.product.domain.entities.product import DetailProduct
+from src.apps.product.domain.errors.review import ReviewsNotFoundException
 from src.apps.product.infrastructure.models.review import ReviewORM
 from src.apps.user.domain.errors import UserNotAuthenticatedException
 from src.helper.errors import fail
@@ -45,8 +46,8 @@ class PostgresReviewRepository(IReviewRepository):
         if not review.is_authenticated():
             fail(UserNotAuthenticatedException)
             
-            
-        if not self.get_by_id(oid=review.oid):
+        dto = self.get_by_id(oid=review.oid)
+        if not dto:
             dto = ReviewORM.objects.create(
                 oid=review.oid,
                 user=review.user,
@@ -56,7 +57,9 @@ class PostgresReviewRepository(IReviewRepository):
             )
         
         else:
-            dto = ReviewORM.objects.filter(id=review.oid).update(rating=review.rating, content=review.content)
+            dto.rating = review.rating
+            dto.content = review.content
+            dto.save()
         
         return dto
     
@@ -75,10 +78,14 @@ class PostgresReviewRepository(IReviewRepository):
         sort_direction = "-" if sort_order == -1 else ""
         order_by_field = f"{sort_direction}{sort_field}"
         reviews = ReviewORM.objects.filter(id=product.oid).order_by(order_by_field)[offset: offset + limit]
+        if not reviews.exists:
+            fail(ReviewsNotFoundException)
         return list(reviews)
 
     def count_many(self, product: DetailProduct) -> int:
         count = ReviewORM.objects.filter(id=product.oid).count()
+        if not count:
+            fail(ReviewsNotFoundException) 
         return count
 
      
