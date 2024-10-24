@@ -48,7 +48,6 @@ class PostgresReviewRepository(IReviewRepository):
         dto = self.get_by_id(oid=review.oid)
         if not dto:
             dto = ReviewORM.objects.create(
-                oid=review.oid,
                 user=review.user,
                 product=review.product,
                 rating=review.rating,
